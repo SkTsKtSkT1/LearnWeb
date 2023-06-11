@@ -1,0 +1,11 @@
+# ninja log v5
+0	5745	7081806151848693	build.ninja	b1cb491cba112f14
+7	1387	7081806165859803	CMakeFiles/tests.dir/tests/test.cpp.obj	a1c2d665489d410b
+2	844	7081898233036046	CMakeFiles/skt_learn_web.dir/skt/log/log.cpp.obj	afa9dcf0c529b9dc
+2	307	7081898709537792	CMakeFiles/tests.dir/tests/test.cpp.obj	a1c2d665489d410b
+9	721	7081898713656192	CMakeFiles/skt_learn_web.dir/skt/log/log.cpp.obj	afa9dcf0c529b9dc
+721	944	7081898715859997	I:/CLion/LearnWeb/lib/libskt_learn_web.dll	b2b792c7f6484280
+721	944	7081898715859997	I:/CLion/LearnWeb/lib/libskt_learn_web.dll.a	b2b792c7f6484280
+944	1031	7081898716752051	I:/CLion/LearnWeb/bin/tests.exe	16303e9d802cc221
+2	305	7081900978652950	CMakeFiles/tests.dir/tests/test.cpp.obj	a1c2d665489d410b
+306	390	7081900979449165	I:/CLion/LearnWeb/bin/tests.exe	16303e9d802cc221

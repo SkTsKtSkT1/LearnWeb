@@ -1,0 +1,103 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "I:/CLion/LearnWeb/lib/libskt_learn_web.dll"
+		},
+		{
+			"path" : "I:/CLion/LearnWeb/lib/libskt_learn_web.dll.a"
+		},
+		{
+			"path" : "I:/CLion/LearnWeb/lib/libskt_learn_web.pdb"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 13,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "  -O0 -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function -g -fdiagnostics-color=always"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"define" : "skt_learn_web_EXPORTS"
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"id" : "skt_learn_web::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "skt_learn_web",
+	"nameOnDisk" : "libskt_learn_web.dll",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "skt/log/log.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "SHARED_LIBRARY"
+}
