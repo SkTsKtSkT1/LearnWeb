@@ -1,0 +1,4 @@
+/Users/skt/CLionProjects/LearnWeb/build/CMakeFiles/skt_learn_web.dir
+/Users/skt/CLionProjects/LearnWeb/build/CMakeFiles/tests.dir
+/Users/skt/CLionProjects/LearnWeb/build/CMakeFiles/edit_cache.dir
+/Users/skt/CLionProjects/LearnWeb/build/CMakeFiles/rebuild_cache.dir
