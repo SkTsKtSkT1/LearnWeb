@@ -1,5 +1,5 @@
 # LearnWeb
-![last-commit](https://img.shields.io/github/last-commit/SkTsKtSkT1/LearnWeb)![actions](https://img.shields.io/github/actions/workflow/status/SkTsKtSkT1/LearnWeb/actions.yml)![codesize](https://img.shields.io/github/languages/code-size/SkTsKtSkT1/LearnWeb)![codepercent](https://img.shields.io/github/languages/top/SkTsKtSkT1/LearnWeb)
+![last-commit](https://img.shields.io/github/last-commit/SkTsKtSkT1/LearnWeb)&emsp;![actions](https://img.shields.io/github/actions/workflow/status/SkTsKtSkT1/LearnWeb/actions.yml)&emsp;![codesize](https://img.shields.io/github/languages/code-size/SkTsKtSkT1/LearnWeb)&emsp;![codepercent](https://img.shields.io/github/languages/top/SkTsKtSkT1/LearnWeb)
 
 https://www.bilibili.com/video/BV184411s7qF
 ## 开发环境
