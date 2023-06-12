@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC   -rdynamic -O0 -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function  -shared -Wl,-soname,libskt_learn_web.so -o ../lib/libskt_learn_web.so CMakeFiles/skt_learn_web.dir/skt/log/log.cpp.o CMakeFiles/skt_learn_web.dir/skt/util/util.cpp.o 

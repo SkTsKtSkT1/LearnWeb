@@ -1,4 +1,0 @@
-/home/ubuntu/skt/LearnWeb/build/CMakeFiles/rebuild_cache.dir
-/home/ubuntu/skt/LearnWeb/build/CMakeFiles/edit_cache.dir
-/home/ubuntu/skt/LearnWeb/build/CMakeFiles/tests.dir
-/home/ubuntu/skt/LearnWeb/build/CMakeFiles/skt_learn_web.dir
