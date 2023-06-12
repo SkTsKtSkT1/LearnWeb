@@ -12,17 +12,53 @@
 #include "sstream"
 #include "fstream"
 #include "vector"
+#include "map"
+#include "../util/util.h"
+#include "thread"
 //m_level表示记录大于该level的日志
+
+
+
+#define SKT_LOG_LEVEL(logger, level) \
+    if(logger->getLevel() <= level) \
+        skt::LogEventWrap(skt::LogEvent::ptr(new skt::LogEvent(logger, level, \
+                        __FILE__, __LINE__, 0, skt::GetThreadId(),\
+                skt::GetFiberId(), time(0)))).getSS()
+
+
+#define SKT_LOG_DEBUG(logger)  SKT_LOG_LEVEL(logger, skt::LogLevel::DEBUG)
+#define SKT_LOG_INFO(logger)  SKT_LOG_LEVEL(logger, skt::LogLevel::INFO)
+#define SKT_LOG_WARN(logger)  SKT_LOG_LEVEL(logger, skt::LogLevel::WARN)
+#define SKT_LOG_ERROR(logger)  SKT_LOG_LEVEL(logger, skt::LogLevel::ERROR)
+#define SKT_LOG_FATAL(logger)  SKT_LOG_LEVEL(logger, skt::LogLevel::FATAL)
+
 
 namespace skt{
 
 class Logger;
 
+
+//日志级别
+class LogLevel{
+public:
+    enum Level{
+        UNKOWN = 0,
+        DEBUG = 1,
+        INFO = 2,
+        WARN = 3,
+        ERROR = 4,
+        FATAL = 5
+    };
+
+    static const char* ToString(LogLevel::Level level);
+};
+
 class LogEvent{
 public:
     typedef std::shared_ptr<LogEvent> ptr;
-    LogEvent(const char* file, int32_t line, uint32_t elapse,
-             uint32_t thread_id, uint32_t fiber_id, uint64_t time);
+    LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level, 
+            const char* file, int32_t line, uint32_t elapse,
+            uint32_t thread_id, uint32_t fiber_id, uint64_t time);
 
     const char* getFile() const {return m_file;}
     int32_t getLine() const {return m_line;}
@@ -30,7 +66,9 @@ public:
     uint32_t getThreadId() const {return m_threadId;}
     uint32_t getFiberId() const {return m_fiberId;}
     uint64_t getTime() const {return m_time;}
-    const std::string getContent() const {return m_ss.str();}
+    std::string getContent() const {return m_ss.str();}
+    std::shared_ptr<Logger> getLogger() const {return m_logger;}
+    LogLevel::Level getLevel() const {return m_level;}
     std::stringstream& getSS() {return m_ss;}
 private:
     const char* m_file = nullptr;  //文件名
@@ -40,22 +78,23 @@ private:
     uint32_t m_fiberId = 0; //协程id
     uint64_t m_time;        //时间戳
     std::stringstream m_ss;  //日志内容
+
+    std::shared_ptr<Logger> m_logger;
+    LogLevel::Level m_level;
 };
 
-//日志级别
-class LogLevel{
+class LogEventWrap{
 public:
-    enum Level{
-        UNKOWN = 0,
-        DEBUG,
-        INFO,
-        WARN,
-        ERROR,
-        FATAL
-    };
+    LogEventWrap(LogEvent::ptr e);
+    ~LogEventWrap();
+    
+    LogEvent::ptr getEvent() const {return m_event;}
+    std::stringstream& getSS();
+private:
+    LogEvent::ptr m_event;
 
-    static const char* ToString(LogLevel::Level level);
 };
+
 
 //日志格式
 class LogFormatter{
@@ -67,8 +106,7 @@ public:
     class FormatItem{
     public:
         typedef std::shared_ptr<FormatItem> ptr;
-        FormatItem(const std::string& fmt = "") {};
-        virtual ~FormatItem() {};
+        virtual ~FormatItem() {}
 
         virtual void format(std::ostream& os, std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) = 0;
     };
@@ -91,7 +129,7 @@ public:
     LogFormatter::ptr getFormatter() const {return m_formatter;}
 
 protected: //子类需要使用
-    LogLevel::Level m_level;
+    LogLevel::Level m_level = LogLevel::DEBUG;
     LogFormatter::ptr m_formatter;
 };
 
@@ -128,7 +166,6 @@ class StdoutLogAppender : public LogAppender{
 public:
     typedef std::shared_ptr<StdoutLogAppender> ptr;
     virtual void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
-private:
 };
 
 //输出到文件的Appender
@@ -144,8 +181,6 @@ private:
     std::string m_filename;
     std::ofstream m_filestream;
 };
-
-
 
 }
 

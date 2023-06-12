@@ -1,14 +1,21 @@
-
-# Consider dependencies only in project.
-set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
-
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
+  "CXX"
+  )
+# The set of files for implicit dependencies of each language:
+set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/ubuntu/skt/LearnWeb/skt/log/log.cpp" "/home/ubuntu/skt/LearnWeb/build/CMakeFiles/skt_learn_web.dir/skt/log/log.cpp.o"
+  "/home/ubuntu/skt/LearnWeb/skt/util/util.cpp" "/home/ubuntu/skt/LearnWeb/build/CMakeFiles/skt_learn_web.dir/skt/util/util.cpp.o"
+  )
+set(CMAKE_CXX_COMPILER_ID "GNU")
+
+# Preprocessor definitions for this target.
+set(CMAKE_TARGET_DEFINITIONS_CXX
+  "skt_learn_web_EXPORTS"
   )
 
-# The set of dependency files which are needed:
-set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/skt/CLionProjects/LearnWeb/skt/log/log.cpp" "CMakeFiles/skt_learn_web.dir/skt/log/log.cpp.o" "gcc" "CMakeFiles/skt_learn_web.dir/skt/log/log.cpp.o.d"
+# The include file search paths:
+set(CMAKE_CXX_TARGET_INCLUDE_PATH
   )
 
 # Targets to which this target links.
