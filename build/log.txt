@@ -1,0 +1,2 @@
+2023-06-12 21:27:24	ERROR	test macro error
+2023-06-12 21:27:24	ERROR	test macro fmt error aa

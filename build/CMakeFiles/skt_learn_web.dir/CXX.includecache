@@ -19,6 +19,8 @@ time.h
 /home/ubuntu/skt/LearnWeb/skt/log/time.h
 string
 /home/ubuntu/skt/LearnWeb/skt/log/string
+stdarg.h
+/home/ubuntu/skt/LearnWeb/skt/log/stdarg.h
 ../util/util.h
 /home/ubuntu/skt/LearnWeb/skt/util/util.h
 
@@ -39,10 +41,16 @@ vector
 /home/ubuntu/skt/LearnWeb/skt/log/vector
 map
 /home/ubuntu/skt/LearnWeb/skt/log/map
-../util/util.h
-/home/ubuntu/skt/LearnWeb/skt/util/util.h
 thread
 /home/ubuntu/skt/LearnWeb/skt/log/thread
+../util/util.h
+/home/ubuntu/skt/LearnWeb/skt/util/util.h
+../singleton/singleton.h
+/home/ubuntu/skt/LearnWeb/skt/singleton/singleton.h
+
+/home/ubuntu/skt/LearnWeb/skt/singleton/singleton.h
+memory
+/home/ubuntu/skt/LearnWeb/skt/singleton/memory
 
 /home/ubuntu/skt/LearnWeb/skt/util/util.h
 pthread.h

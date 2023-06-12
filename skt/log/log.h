@@ -13,12 +13,13 @@
 #include "fstream"
 #include "vector"
 #include "map"
-#include "../util/util.h"
 #include "thread"
+#include "../util/util.h"
+#include "../singleton/singleton.h"
 //m_level表示记录大于该level的日志
 
 
-
+//流式记录日志的宏
 #define SKT_LOG_LEVEL(logger, level) \
     if(logger->getLevel() <= level) \
         skt::LogEventWrap(skt::LogEvent::ptr(new skt::LogEvent(logger, level, \
@@ -32,6 +33,18 @@
 #define SKT_LOG_ERROR(logger)  SKT_LOG_LEVEL(logger, skt::LogLevel::ERROR)
 #define SKT_LOG_FATAL(logger)  SKT_LOG_LEVEL(logger, skt::LogLevel::FATAL)
 
+//format记录日志的宏
+#define SKT_LOG_FMT_LEVEL(logger, level, fmt, ...)\
+    if(logger->getLevel() <= level) \
+    skt::LogEventWrap(skt::LogEvent::ptr(new skt::LogEvent(logger, level, \
+                    __FILE__, __LINE__, 0, skt::GetThreadId(),\
+                    skt::GetFiberId(), time(0)))).getEvent()->format(fmt, __VA_ARGS__)
+
+#define SKT_LOG_FMT_DEBUG(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::DEBUG, fmt, __VA_ARGS__)
+#define SKT_LOG_FMT_INFO(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::INFO, fmt, __VA_ARGS__)
+#define SKT_LOG_FMT_WARN(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::WARN, fmt, __VA_ARGS__)
+#define SKT_LOG_FMT_ERROR(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::ERROR, fmt, __VA_ARGS__)
+#define SKT_LOG_FMT_FATAL(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::FATAL, fmt, __VA_ARGS__)
 
 namespace skt{
 
@@ -68,8 +81,11 @@ public:
     uint64_t getTime() const {return m_time;}
     std::string getContent() const {return m_ss.str();}
     std::shared_ptr<Logger> getLogger() const {return m_logger;}
-    LogLevel::Level getLevel() const {return m_level;}
     std::stringstream& getSS() {return m_ss;}
+    LogLevel::Level getLevel() const {return m_level;}
+
+    void format(const char* fmt, ...);
+    void format(const char* fmt, va_list al);
 private:
     const char* m_file = nullptr;  //文件名
     int32_t m_line = 0;      // 行号
@@ -128,6 +144,9 @@ public:
     void setFormatter(LogFormatter::ptr val){ m_formatter = val;}
     LogFormatter::ptr getFormatter() const {return m_formatter;}
 
+    LogLevel::Level getLevel() const {return m_level;}
+    void setLevel(LogLevel::Level val) {m_level = val;} 
+
 protected: //子类需要使用
     LogLevel::Level m_level = LogLevel::DEBUG;
     LogFormatter::ptr m_formatter;
@@ -181,6 +200,20 @@ private:
     std::string m_filename;
     std::ofstream m_filestream;
 };
+
+//管理所有的logger
+class LoggerManager{
+public:
+    LoggerManager();
+    Logger::ptr getLogger(const std::string& name);
+
+    void init();
+private:
+    std::map<std::string, Logger::ptr> m_loggers;
+    Logger::ptr m_root;
+};
+
+typedef skt::Singleton<LoggerManager> LoggerMgr;
 
 }
 

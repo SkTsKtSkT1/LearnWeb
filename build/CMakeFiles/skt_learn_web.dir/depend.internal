@@ -4,6 +4,7 @@
 CMakeFiles/skt_learn_web.dir/skt/log/log.cpp.o
  /home/ubuntu/skt/LearnWeb/skt/log/log.cpp
  /home/ubuntu/skt/LearnWeb/skt/log/log.h
+ /home/ubuntu/skt/LearnWeb/skt/singleton/singleton.h
  /home/ubuntu/skt/LearnWeb/skt/util/util.h
 CMakeFiles/skt_learn_web.dir/skt/util/util.cpp.o
  /home/ubuntu/skt/LearnWeb/skt/util/util.cpp

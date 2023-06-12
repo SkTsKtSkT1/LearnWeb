@@ -8,6 +8,7 @@
 #include "functional"
 #include "time.h"
 #include "string"
+#include "stdarg.h"
 #include "../util/util.h"
 
 namespace skt{
@@ -37,10 +38,6 @@ LogEventWrap::~LogEventWrap(){
     m_event->getLogger()->log(m_event->getLevel(), m_event);
 }
 
-std::stringstream& LogEventWrap::getSS() {
-    return m_event->getSS();
-}
-
 LogEvent::LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level, 
         const char* file, int32_t line, uint32_t elapse,
         uint32_t thread_id, uint32_t fiber_id, uint64_t time) :
@@ -52,6 +49,27 @@ LogEvent::LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level,
         ,m_time(time)
         ,m_logger(logger)
         ,m_level(level){
+}
+
+
+void LogEvent::format(const char* fmt, ...){
+    va_list al;
+    va_start(al, fmt);
+    format(fmt, al);
+    va_end(al);
+};
+
+std::stringstream& LogEventWrap::getSS() {
+    return m_event->getSS();
+}
+
+void LogEvent::format(const char* fmt, va_list al){
+    char* buf = nullptr;
+    int len = vasprintf(&buf, fmt, al);
+    if(len != -1){
+        m_ss << std::string(buf, len);
+        free(buf);
+    }
 }
 
 Logger::Logger(const std::string &name) : m_name(name), m_level(LogLevel::DEBUG){
@@ -359,5 +377,16 @@ void LogFormatter::init() {
     //std::cout << m_items.size() << std::endl;
 }
 
+
+LoggerManager::LoggerManager() {
+    m_root.reset(new Logger);
+    //默认的appender
+    m_root->addAppender(LogAppender::ptr(new StdoutLogAppender));
+};
+
+Logger::ptr  LoggerManager::getLogger(const std::string& name){
+    auto it = m_loggers.find(name);
+    return it == m_loggers.end() ? m_root : it->second;
+}
 
 }

@@ -3,6 +3,7 @@
 
 CMakeFiles/skt_learn_web.dir/skt/log/log.cpp.o: ../skt/log/log.cpp
 CMakeFiles/skt_learn_web.dir/skt/log/log.cpp.o: ../skt/log/log.h
+CMakeFiles/skt_learn_web.dir/skt/log/log.cpp.o: ../skt/singleton/singleton.h
 CMakeFiles/skt_learn_web.dir/skt/log/log.cpp.o: ../skt/util/util.h
 
 CMakeFiles/skt_learn_web.dir/skt/util/util.cpp.o: ../skt/util/util.cpp
