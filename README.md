@@ -1,5 +1,6 @@
 # LearnWeb
-https://www.bilibili.com/video/BV184411s7qF
+![last-commit](https://img.shields.io/github/last-commit/SkTsKtSkT1/LearnWeb)
+https://www.bilibili.com/video/BV184411s7qF![last-commit](https://img.shields.io/github/last-commit/SkTsKtSkT1/LearnWeb)![actions](https://img.shields.io/github/actions/workflow/status/SkTsKtSkT1/LearnWeb/actions.yml)![codesize](https://img.shields.io/github/languages/code-size/SkTsKtSkT1/LearnWeb)![codepercent](https://img.shields.io/github/languages/top/SkTsKtSkT1/LearnWeb)
 ## 开发环境
 Ubuntu 20.04 LTS
 
