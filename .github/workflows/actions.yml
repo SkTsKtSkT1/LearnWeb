@@ -24,7 +24,7 @@ jobs:
       - name: Show Result
         run: |
           ${{github.workspace}}/bin/tests
-          cat ${{github.workspace}}/build/log.txt
+          ls ${{github.workspace}}/build
 
       
 
