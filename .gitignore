@@ -34,3 +34,10 @@
 
 # Vscode file
 /.vscode/
+
+
+# cmake cached file
+/build/CMakeFiles/
+/build/CMakeCache.txt
+/build/cmake_install.cmake
+/build/log.txt
