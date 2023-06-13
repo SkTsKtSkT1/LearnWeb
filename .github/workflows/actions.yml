@@ -11,11 +11,21 @@ jobs:
   build-the-test:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout main
+      - name: Checkout main
         uses: actions/checkout@v3
         with:
           ref: main
-
+      - name: Install Boost Lib
+        run: sudo apt install libboost-all-dev -y
+      
+      - name: Install YAML-CPP LIB
+        run: |
+            git clone https://github.com/jbeder/yaml-cpp.git
+            cd yaml-cpp
+            mkdir build
+            cd build
+            cmake ..
+            make install
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
