@@ -41,3 +41,6 @@
 /build/CMakeCache.txt
 /build/cmake_install.cmake
 /build/log.txt
+
+#execute file
+/bin/

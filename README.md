@@ -36,6 +36,11 @@ test -- 测试代码路径
         |
     Appender(日志输出地方)
 
+## 配置系统
+
+Config --> Yaml
+
+- Boost required (sudo apt install libboost-all-dev -y)
     
 ## 协程库封装
 
