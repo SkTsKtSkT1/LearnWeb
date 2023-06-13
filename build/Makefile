@@ -51,10 +51,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/skt/skt/LearnWeb
+CMAKE_SOURCE_DIR = /home/ubuntu/skt/LearnWeb
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/skt/skt/LearnWeb/build
+CMAKE_BINARY_DIR = /home/ubuntu/skt/LearnWeb/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -83,9 +83,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/skt/skt/LearnWeb/build/CMakeFiles /home/skt/skt/LearnWeb/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/skt/LearnWeb/build/CMakeFiles /home/ubuntu/skt/LearnWeb/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/skt/skt/LearnWeb/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ubuntu/skt/LearnWeb/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -114,17 +114,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named tests
+# Target rules for targets named test_config
 
 # Build rule for target.
-tests: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 tests
-.PHONY : tests
+test_config: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_config
+.PHONY : test_config
 
 # fast build rule for target.
-tests/fast:
-	$(MAKE) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/build
-.PHONY : tests/fast
+test_config/fast:
+	$(MAKE) -f CMakeFiles/test_config.dir/build.make CMakeFiles/test_config.dir/build
+.PHONY : test_config/fast
 
 #=============================================================================
 # Target rules for targets named skt_learn_web
@@ -138,6 +138,33 @@ skt_learn_web: cmake_check_build_system
 skt_learn_web/fast:
 	$(MAKE) -f CMakeFiles/skt_learn_web.dir/build.make CMakeFiles/skt_learn_web.dir/build
 .PHONY : skt_learn_web/fast
+
+skt/config/config.o: skt/config/config.cpp.o
+
+.PHONY : skt/config/config.o
+
+# target to build an object file
+skt/config/config.cpp.o:
+	$(MAKE) -f CMakeFiles/skt_learn_web.dir/build.make CMakeFiles/skt_learn_web.dir/skt/config/config.cpp.o
+.PHONY : skt/config/config.cpp.o
+
+skt/config/config.i: skt/config/config.cpp.i
+
+.PHONY : skt/config/config.i
+
+# target to preprocess a source file
+skt/config/config.cpp.i:
+	$(MAKE) -f CMakeFiles/skt_learn_web.dir/build.make CMakeFiles/skt_learn_web.dir/skt/config/config.cpp.i
+.PHONY : skt/config/config.cpp.i
+
+skt/config/config.s: skt/config/config.cpp.s
+
+.PHONY : skt/config/config.s
+
+# target to generate assembly for a file
+skt/config/config.cpp.s:
+	$(MAKE) -f CMakeFiles/skt_learn_web.dir/build.make CMakeFiles/skt_learn_web.dir/skt/config/config.cpp.s
+.PHONY : skt/config/config.cpp.s
 
 skt/log/log.o: skt/log/log.cpp.o
 
@@ -193,32 +220,32 @@ skt/util/util.cpp.s:
 	$(MAKE) -f CMakeFiles/skt_learn_web.dir/build.make CMakeFiles/skt_learn_web.dir/skt/util/util.cpp.s
 .PHONY : skt/util/util.cpp.s
 
-tests/test.o: tests/test.cpp.o
+tests/test_config.o: tests/test_config.cpp.o
 
-.PHONY : tests/test.o
+.PHONY : tests/test_config.o
 
 # target to build an object file
-tests/test.cpp.o:
-	$(MAKE) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/tests/test.cpp.o
-.PHONY : tests/test.cpp.o
+tests/test_config.cpp.o:
+	$(MAKE) -f CMakeFiles/test_config.dir/build.make CMakeFiles/test_config.dir/tests/test_config.cpp.o
+.PHONY : tests/test_config.cpp.o
 
-tests/test.i: tests/test.cpp.i
+tests/test_config.i: tests/test_config.cpp.i
 
-.PHONY : tests/test.i
+.PHONY : tests/test_config.i
 
 # target to preprocess a source file
-tests/test.cpp.i:
-	$(MAKE) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/tests/test.cpp.i
-.PHONY : tests/test.cpp.i
+tests/test_config.cpp.i:
+	$(MAKE) -f CMakeFiles/test_config.dir/build.make CMakeFiles/test_config.dir/tests/test_config.cpp.i
+.PHONY : tests/test_config.cpp.i
 
-tests/test.s: tests/test.cpp.s
+tests/test_config.s: tests/test_config.cpp.s
 
-.PHONY : tests/test.s
+.PHONY : tests/test_config.s
 
 # target to generate assembly for a file
-tests/test.cpp.s:
-	$(MAKE) -f CMakeFiles/tests.dir/build.make CMakeFiles/tests.dir/tests/test.cpp.s
-.PHONY : tests/test.cpp.s
+tests/test_config.cpp.s:
+	$(MAKE) -f CMakeFiles/test_config.dir/build.make CMakeFiles/test_config.dir/tests/test_config.cpp.s
+.PHONY : tests/test_config.cpp.s
 
 # Help Target
 help:
@@ -228,17 +255,20 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... tests"
+	@echo "... test_config"
 	@echo "... skt_learn_web"
+	@echo "... skt/config/config.o"
+	@echo "... skt/config/config.i"
+	@echo "... skt/config/config.s"
 	@echo "... skt/log/log.o"
 	@echo "... skt/log/log.i"
 	@echo "... skt/log/log.s"
 	@echo "... skt/util/util.o"
 	@echo "... skt/util/util.i"
 	@echo "... skt/util/util.s"
-	@echo "... tests/test.o"
-	@echo "... tests/test.i"
-	@echo "... tests/test.s"
+	@echo "... tests/test_config.o"
+	@echo "... tests/test_config.i"
+	@echo "... tests/test_config.s"
 .PHONY : help
 
 

@@ -125,7 +125,7 @@ void Logger::fatal(LogEvent::ptr event) {
 
 void StdoutLogAppender::log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) {
     if(level >= m_level){
-        std::cout << m_formatter->format(logger, level, event) << std::endl;
+        std::cout << m_formatter->format(logger, level, event);
     }
 }
 

@@ -41,7 +41,10 @@ test -- 测试代码路径
 Config --> Yaml
 
 - Boost required (sudo apt install libboost-all-dev -y)
-    
+
+yaml-cpp  github
+mkdir build && cd build && camke .. && make install
+
 ## 协程库封装
 
 ## socket函数库

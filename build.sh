@@ -3,6 +3,7 @@
 set -x
 
 cd build \
+	&& make clean\
 	&& cmake ..\
-	&& make \
-	&& ../bin/tests
+	&& make -j2\
+	&& ../bin/test_config

@@ -4,19 +4,23 @@ project(skt_learn_web)
 set(CMAKE_VERBOSE_MAKEFILE ON) #-rdynamic -O0
 set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS}  -rdynamic -O0 -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function")
 
+include_directories(.)
+include_directories(/usr/local/include)
 
+link_directories(/usr/local/lib)
 
 set(LIB_SRC
      skt/log/log.cpp
      skt/util/util.cpp
+     skt/config/config.cpp
 )
 
 add_library(skt_learn_web SHARED ${LIB_SRC})
 
 
-add_executable(tests tests/test.cpp)
-add_dependencies(tests skt_learn_web)
-target_link_libraries(tests skt_learn_web)
+add_executable(test_config tests/test_config.cpp)
+add_dependencies(test_config skt_learn_web)
+target_link_libraries(test_config skt_learn_web yaml-cpp)
 
 SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)

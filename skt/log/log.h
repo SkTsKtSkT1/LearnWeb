@@ -46,6 +46,9 @@
 #define SKT_LOG_FMT_ERROR(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::ERROR, fmt, __VA_ARGS__)
 #define SKT_LOG_FMT_FATAL(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::FATAL, fmt, __VA_ARGS__)
 
+#define SKT_LOG_ROOT() skt:: LoggerMgr::GetInstance()->getRoot()
+
+
 namespace skt{
 
 class Logger;
@@ -208,6 +211,7 @@ public:
     Logger::ptr getLogger(const std::string& name);
 
     void init();
+    Logger::ptr getRoot() const {return m_root;}
 private:
     std::map<std::string, Logger::ptr> m_loggers;
     Logger::ptr m_root;
