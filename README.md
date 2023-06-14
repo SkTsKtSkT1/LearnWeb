@@ -43,7 +43,7 @@ Config --> Yaml
 - Boost required (sudo apt install libboost-all-dev -y)
 
 yaml-cpp  github
-mkdir build && cd build && camke .. && make install
+mkdir build && cd build && camke .. && sudo make install
 
 ## 协程库封装
 
