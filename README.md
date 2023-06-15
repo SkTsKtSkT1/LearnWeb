@@ -45,6 +45,20 @@ Config --> Yaml
 yaml-cpp  github
 mkdir build && cd build && camke .. && sudo make install
 
+```cpp
+YAML::Node node = YAML::LoadFile(filename)
+node.IsMap()
+for(auto it = node.begin(); it != onde.end(); ++it){
+}
+
+node.IsSequence()
+for(size_t i = 0; i < node.size(); ++i){
+
+}
+
+node.IsScalar()
+```
+
 ## 协程库封装
 
 ## socket函数库
