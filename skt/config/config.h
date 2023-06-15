@@ -42,7 +42,7 @@ public:
             :ConfigVarBase(name, description)
             ,m_val(default_value){
     }
-    std::string toString() override {
+    std::string toString() override { //override表示重载了
         try{
             return boost::lexical_cast<std::string>(m_val);
         }catch(std::exception& e){

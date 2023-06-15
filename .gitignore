@@ -42,6 +42,3 @@
 /build/cmake_install.cmake
 /build/log.txt
 /build/
-
-#execute file
-/bin/

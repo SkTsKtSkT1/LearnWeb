@@ -3,10 +3,10 @@
 
 namespace skt{
 
-Config::ConfigVarMap Config::s_datas;  //类在使用时才生成代码
+Config::ConfigVarMap Config::s_datas;  //static 成员变量的内存既不是在声明类时分配，也不是在创建对象时分配，而是在（类外）初始化时分配。反过来说，没有在类外初始化的 static 成员变量不能使用。
 ConfigVarBase::ptr Config::LookupBase(const std::string& name){
     auto it = s_datas.find(name);
-    return it == s_datas.end() ? nullptr : it->second;
+    return it == s_datas.end() ? nullptr : it->second; //s_datas的指针是ConfigVar类型，因此可以调用子类的方法。
 }
 //"A.B", 10
 //A:
