@@ -30,7 +30,7 @@ void print_yaml(const YAML::Node& node, int level){
 
 
 void test_yaml(){
-    YAML::Node root = YAML::LoadFile("/home/ubuntu/skt/LearnWeb/bin/conf/log.yml");
+    YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/log.yml");
     print_yaml(root, 0);
     SKT_LOG_INFO(SKT_LOG_ROOT()) << root.Scalar();
 }
@@ -39,7 +39,7 @@ void test_config(){
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "before: " << g_int_value_config->getValue();
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "before: " << g_float_value_config->toString();
 
-    YAML::Node root = YAML::LoadFile("/home/ubuntu/skt/LearnWeb/bin/conf/log.yml");
+    YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/log.yml");
     skt::Config::LoadFromYaml(root);
 
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "after: " << g_int_value_config->getValue();
