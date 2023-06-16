@@ -32,7 +32,52 @@ protected:
     std::string m_description;
 };
 
+template<class F, class T> //F:from type, T:to type
+class LexicalCast{
+public:
+    T operator()(const F& v){
+        return boost::lexical_cast<T>(v);
+    }
+
+
+};
+
+//偏特化
 template<class T>
+class LexicalCast<std::string, std::vector<T>>{
+public:
+    std::vector<T> operator()(const std::string& v){
+        YAML::Node node = YAML::Load(v);
+        typename std::vector<T> vec;
+        std::stringstream ss;
+        for(size_t i = 0; i < node.size(); ++i){
+            ss.str("");
+            ss << node[i];
+            vec.push_back(LexicalCast<std::string, T>()(ss.str()));
+        }
+        //return std::move(vec);
+        return vec;
+    }
+};
+
+template<class T>
+class LexicalCast<std::vector<T>, std::string>{
+public:
+    std::string operator()(const std::vector<T>& v){
+        YAML::Node node;
+        for(auto& i : v){
+            node.push_back(YAML::Load(LexicalCast<T, std::string>()(i)));
+        }
+        std::stringstream ss;
+        ss << node;
+        return ss.str();
+    }
+};
+
+
+//FromStr T operater(const std::string&)
+//ToStr std::string operater(const T&)
+template<class T, class FromStr = LexicalCast<std::string, T>, class ToStr = LexicalCast<T, std::string>> //序列化 and 反序列化 
 class ConfigVar : public ConfigVarBase{
 public:
     typedef std::shared_ptr<ConfigVar> ptr;
@@ -44,7 +89,8 @@ public:
     }
     std::string toString() override { //override表示重载了
         try{
-            return boost::lexical_cast<std::string>(m_val);
+            //return boost::lexical_cast<std::string>(m_val);
+            return ToStr()(m_val);
         }catch(std::exception& e){
             SKT_LOG_ERROR(SKT_LOG_ROOT()) << "ConfigVar::toString exception"
                 << e.what() << "convert: " << typeid(m_val).name() << " to string";
@@ -54,7 +100,8 @@ public:
 
     bool fromString(const std::string& val) override {
         try{
-            m_val = boost::lexical_cast<T>(val);
+            //m_val = boost::lexical_cast<T>(val);
+            setValue(FromStr()(val));
             return true;
         }catch(std::exception& e){
             SKT_LOG_ERROR(SKT_LOG_ROOT()) << "ConfigVar::toString exception"

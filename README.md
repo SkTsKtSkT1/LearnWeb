@@ -59,6 +59,16 @@ for(size_t i = 0; i < node.size(); ++i){
 node.IsScalar()
 ```
 
+配置系统原则： 约定优先于配置
+```cpp
+template<T, FromStr, ToStr>
+class ConfigVar;
+
+template<F, T>
+LexicalCast;
+
+STL偏特化，目前支持Vector
+```
 ## 协程库封装
 
 ## socket函数库

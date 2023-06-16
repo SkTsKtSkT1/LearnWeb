@@ -8,7 +8,10 @@ skt::ConfigVar<int>::ptr g_int_value_config =
     skt::Config::Lookup("system.port", (int)8080, "system port");
 
 skt::ConfigVar<float>::ptr g_float_value_config = 
-    skt::Config::Lookup("system.value", (float)10.2f, "system port");
+    skt::Config::Lookup("system.value", (float)10.2f, "system value");
+
+skt::ConfigVar<std::vector<int>>::ptr g_int_vec_value_config = 
+    skt::Config::Lookup("system.int_vec", std::vector<int>{1,2}, "system int vec");
 
 void print_yaml(const YAML::Node& node, int level){
     if(node.IsScalar()){
@@ -38,12 +41,21 @@ void test_yaml(){
 void test_config(){
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "before: " << g_int_value_config->getValue();
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "before: " << g_float_value_config->toString();
+    auto v = g_int_vec_value_config->getValue();
+    for(auto& i : v){
+        SKT_LOG_INFO(SKT_LOG_ROOT()) << "before int_vec: " << i;
+    }
 
     YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/log.yml");
     skt::Config::LoadFromYaml(root);
 
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "after: " << g_int_value_config->getValue();
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "after: " << g_float_value_config->toString();
+
+    v = g_int_vec_value_config->getValue();
+    for(auto& i : v){
+        SKT_LOG_INFO(SKT_LOG_ROOT()) << "after int_vec: " << i;
+    }
 }
 
 int main(int argc, char** argv){
