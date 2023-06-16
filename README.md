@@ -67,7 +67,9 @@ class ConfigVar;
 template<F, T>
 LexicalCast;
 
-STL偏特化，目前支持Vector
+//STL偏特化，目前支持Vector, list, set, map, unordered_map, unordered_set
+//map/unordered_map 支持 key = std::string
+// Config::Lookup(key), key一样，类型不同，不会报错，need 处理。
 ```
 ## 协程库封装
 
