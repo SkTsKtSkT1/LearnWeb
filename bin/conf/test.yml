@@ -29,3 +29,8 @@ system:
         p: 30
         p2: 50
         p3: 10
+class:
+    person:
+        name: skt
+        age: 23
+        sex: true

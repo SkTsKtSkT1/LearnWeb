@@ -32,7 +32,7 @@ public:
 
     virtual std::string toString() = 0;
     virtual bool fromString(const std::string& val) = 0;
-
+    virtual std::string getTypeName() const = 0;
 protected:
     std::string m_name;
     std::string m_description;
@@ -282,6 +282,7 @@ public:
 
     const T getValue() const {return m_val;}
     void setValue(const T& v) {m_val =v;}
+    std::string getTypeName() const override {return typeid(T).name();}
 private:
     T m_val;
 };
@@ -294,10 +295,17 @@ public:
     template<class T>
     static typename ConfigVar<T>::ptr Lookup(const std::string& name,
         const T& default_value, const std::string& description = ""){
-        auto tmp = Lookup<T>(name);
-        if(tmp){
-            SKT_LOG_INFO(SKT_LOG_ROOT()) << "Lookup name= " << name << " exist";
-            return tmp;
+        auto it = s_datas.find(name);
+        if(it != s_datas.end()){
+            auto tmp = std::dynamic_pointer_cast<ConfigVar<T>>(it->second);
+            if(tmp){
+                SKT_LOG_INFO(SKT_LOG_ROOT()) << "Lookup name = " << name << " exist";
+                return tmp;
+            }else{
+                SKT_LOG_ERROR(SKT_LOG_ROOT()) << "Lookup name = " << name << " exist but type not " << typeid(T).name() << "real_type = " << it->second->getTypeName()
+                        << " " << it->second->toString();
+                return nullptr;
+            }
         }
 
         if(name.find_first_not_of("abcdefghijklmnopqrstuvwxyz._012345678")
