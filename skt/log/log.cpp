@@ -31,15 +31,21 @@ const char* LogLevel::ToString(LogLevel::Level level) {
     return "UNKOWN";
 }
 LogLevel::Level LogLevel::FromString(const std::string& str){
-#define XX(name) \
-    if(str == #name){ \
-        return LogLevel::name; \
+#define XX(level, v) \
+    if(str == #v){ \
+        return LogLevel::level; \
     }
-    XX(DEBUG);
-    XX(INFO);
-    XX(WARN);
-    XX(ERROR);
-    XX(FATAL);
+    XX(DEBUG, debug);
+    XX(INFO, info);
+    XX(WARN, warn);
+    XX(ERROR, error);
+    XX(FATAL, fatal);
+
+    XX(DEBUG, DEBUG);
+    XX(INFO, INFO);
+    XX(WARN, WARN);
+    XX(ERROR, ERROR);
+    XX(FATAL, FATAL);
     return LogLevel::UNKNOW;
 #undef XX
 }
@@ -575,9 +581,11 @@ public:
         for(auto& i : v){
             YAML::Node n;
             n["name"] = i.name;
-            n["level"] = LogLevel::ToString(i.level);
+           if(!i.level == LogLevel::UNKNOW){
+                n["level"] = LogLevel::ToString(i.level);
+           }
             if(i.formatter.empty()){
-                n["level"] = i.formatter;
+                n["formatter"] = i.formatter;
             }
             for(auto& a : i.appenders){
                 YAML::Node na;
@@ -615,10 +623,11 @@ struct LogIniter{
                 skt::Logger::ptr logger;
                 if(it == old_value.end()){//新增logger
                     logger = SKT_LOG_NAME(i.name);
-
                 }else{
                     if(!(i == *it)){ //修改logger
                         logger = SKT_LOG_NAME(i.name);
+                    }else{
+                        continue;
                     }
                 }
                 logger->setLevel(i.level);
@@ -637,6 +646,8 @@ struct LogIniter{
                     else if (a.type == 2)
                     {
                         ap.reset(new StdoutLogAppender);
+                    }else{
+                        continue;
                     }
                     ap->setLevel(a.level);
                     logger->addAppender(ap);
@@ -647,7 +658,7 @@ struct LogIniter{
                 auto it = new_value.find(i);
                 if(it == new_value.end()){ //删除logger;
                     auto logger = SKT_LOG_NAME(i.name);
-                    logger->setLevel((LogLevel::Level) 100);
+                    logger->setLevel((LogLevel::Level) 0);
                     logger->clearAppenders();
                 }
             }

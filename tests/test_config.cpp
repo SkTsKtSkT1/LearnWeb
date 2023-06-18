@@ -3,6 +3,7 @@
 #include "yaml-cpp/yaml.h"
 #include "vector"
 #include "string"
+#include "iostream"
 
 skt::ConfigVar<int>::ptr g_int_value_config = 
     skt::Config::Lookup("system.port", (int)8080, "system port");
@@ -196,8 +197,10 @@ void test_class(){
 }
 
 void test_log(){
+    std::cout << skt::LoggerMgr::GetInstance()->toYamlString() << std::endl; 
     YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/log.yml");
-
+    std::cout << "=============" << std::endl;
+    std::cout << skt::LoggerMgr::GetInstance()->toYamlString() << std::endl;
 }
 
 int main(int argc, char** argv){

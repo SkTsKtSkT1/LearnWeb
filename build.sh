@@ -5,4 +5,5 @@ set -x
 cd build \
 	&& make clean\
 	&& cmake ..\
-	&& make -j2
+	&& make -j2\
+	&& ../bin/test_config
