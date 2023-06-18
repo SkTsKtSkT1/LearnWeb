@@ -14,6 +14,7 @@
 #include "list"
 #include "unordered_map"
 #include "unordered_set"
+#include "functional"
 
 namespace skt{
     
@@ -251,6 +252,8 @@ template<class T, class FromStr = LexicalCast<std::string, T>, class ToStr = Lex
 class ConfigVar : public ConfigVarBase{
 public:
     typedef std::shared_ptr<ConfigVar> ptr;
+    typedef std::function<void (const T& old_value, const T& new_value)> on_change_cb;
+
     ConfigVar(const std::string& name, 
             const T& default_value, 
             const std::string& description = "")
@@ -275,16 +278,47 @@ public:
             return true;
         }catch(std::exception& e){
             SKT_LOG_ERROR(SKT_LOG_ROOT()) << "ConfigVar::toString exception"
-                << e.what() << "convert: string to " << typeid(m_val).name();
+                << e.what() << "convert: string to " << typeid(m_val).name()
+                << " - " << val;
         }
         return false;
     }
 
     const T getValue() const {return m_val;}
-    void setValue(const T& v) {m_val =v;}
+    void setValue(const T& v) {
+        //if the value is changed
+        if(v == m_val){
+            return;
+        }else{
+            for(auto& i : m_cbs){
+                i.second(m_val, v);
+            }
+        }
+        m_val = v;
+    }
     std::string getTypeName() const override {return typeid(T).name();}
+
+    void addListener(uint64_t key, on_change_cb cb){
+        m_cbs[key] = cb;
+    }
+
+    void delListener(uint64_t key){
+        m_cbs.erase(key);
+    }
+
+    on_change_cb getListener(uint64_t key){
+        auto it = m_cbs.find(key);
+        return it == m_cbs.end() ? nullptr : it->second;
+    }
+
+    void clearListener(){
+        m_cbs.clear();
+    }
+
 private:
     T m_val;
+    //变更回调函数组，uint63_t key,要求唯一，一般可以用hash
+    std::map<uint64_t, on_change_cb> m_cbs;
 };
 
 //sigleton
@@ -295,8 +329,8 @@ public:
     template<class T>
     static typename ConfigVar<T>::ptr Lookup(const std::string& name,
         const T& default_value, const std::string& description = ""){
-        auto it = s_datas.find(name);
-        if(it != s_datas.end()){
+        auto it = GetDatas().find(name);
+        if(it != GetDatas().end()){
             auto tmp = std::dynamic_pointer_cast<ConfigVar<T>>(it->second);
             if(tmp){
                 SKT_LOG_INFO(SKT_LOG_ROOT()) << "Lookup name = " << name << " exist";
@@ -315,14 +349,14 @@ public:
         }
 
         typename ConfigVar<T>::ptr v(new ConfigVar<T>(name, default_value, description));
-        s_datas[name] = v;
+        GetDatas()[name] = v;
         return v;
     }
 
     template<class T>
     static typename ConfigVar<T>::ptr Lookup(const std::string& name){
-        auto it = s_datas.find(name);
-        if(it == s_datas.end()){
+        auto it = GetDatas().find(name);
+        if(it == GetDatas().end()){
             return nullptr;
         }
         //由于放的是基类，找到了需要转换成子类
@@ -332,7 +366,11 @@ public:
     static void LoadFromYaml(const YAML::Node& root);
     static ConfigVarBase::ptr LookupBase(const std::string& name);
 private:
-    static ConfigVarMap s_datas;
+    static ConfigVarMap& GetDatas(){
+        static ConfigVarMap s_datas;
+        return s_datas;
+    }
+    
 };
 
 }

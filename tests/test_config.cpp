@@ -51,7 +51,7 @@ void print_yaml(const YAML::Node& node, int level){
 
 
 void test_yaml(){
-    YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/log.yml");
+    YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/test.yml");
     print_yaml(root, 0);
     SKT_LOG_INFO(SKT_LOG_ROOT()) << root.Scalar();
 }
@@ -119,6 +119,10 @@ public:
         ss<<"[Person name =" << m_name << " age = " << m_age << " sex = " << m_sex << "]";
         return ss.str();
     }
+    bool operator==(const Person& oth) const{
+        return m_name == oth.m_name && m_age == oth.m_age
+            && m_sex == oth.m_sex;
+    }
 };
 
 namespace skt{
@@ -148,6 +152,7 @@ public:
         ss << node;
         return ss.str();
     }
+
 };
 
 }
@@ -157,18 +162,48 @@ public:
 skt::ConfigVar<Person>::ptr g_person = 
     skt::Config::Lookup("class.person", Person(), "system person");
 
+skt::ConfigVar<std::map<std::string, Person>>::ptr g_person_map = 
+    skt::Config::Lookup("class.map", std::map<std::string, Person>(), "system person");
+
+skt::ConfigVar<std::map<std::string, std::vector<Person>>>::ptr g_person_vec_map = 
+    skt::Config::Lookup("class.vec_map", std::map<std::string, std::vector<Person>>(), "system person");
+
 void test_class(){
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "before: " << g_person->getValue().toString() << " - " << g_person->toString();
     
+#define XX_PM(g_var, prefix)  \
+{\
+    auto m = g_person_map->getValue();\
+    for(auto& i : m){\
+        SKT_LOG_INFO(SKT_LOG_ROOT()) << #prefix << ": " << i.first << " - " << i.second.toString();\
+    }\
+    SKT_LOG_INFO(SKT_LOG_ROOT()) << #prefix << ": size=" <<  m.size();\
+}
+
+    g_person->addListener(10, [](const Person& old_value, const Person& new_value){
+        SKT_LOG_INFO(SKT_LOG_ROOT()) << "old_value=" << old_value.toString() << " new_value=" << new_value.toString();
+    });
+
+    XX_PM(g_person_map, "class.map before");
+    SKT_LOG_INFO(SKT_LOG_ROOT()) << "before: " << g_person_vec_map->toString();
+
     YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/test.yml");
     skt::Config::LoadFromYaml(root);
 
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "after: " << g_person->getValue().toString() << " - " << g_person->toString();
-}   
+    XX_PM(g_person_map, "class.map after");
+    SKT_LOG_INFO(SKT_LOG_ROOT()) << "after: " << g_person_vec_map->toString();
+}
+
+void test_log(){
+    YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/log.yml");
+
+}
 
 int main(int argc, char** argv){
     //test_yaml();
     //test_config();
-    test_class();
+    //test_class();
+    test_log();
     return 0;
 }

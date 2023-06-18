@@ -29,8 +29,33 @@ system:
         p: 30
         p2: 50
         p3: 10
+
 class:
     person:
         name: skt
         age: 23
         sex: true
+    map:
+        skt01:
+          name: skt01
+          age: 18
+          sex: false
+        skt02:
+          name: skt02
+          age: 20
+          sex: true
+    vec_map:
+        k1:
+          - name: m1
+            age: 33
+            sex: true
+          - name: m2
+            age: 44
+            sex: false
+        k2:
+          - name: m21
+            age: 33
+            sex: true
+          - name: m22
+            age: 44
+            sex: false

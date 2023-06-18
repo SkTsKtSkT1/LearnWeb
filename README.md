@@ -38,7 +38,7 @@ test -- 测试代码路径
 
 ## 配置系统
 
-Config --> Yaml
+Config --> Yaml（https://www.runoob.com/w3cnote/yaml-intro.html）
 
 - Boost required (sudo apt install libboost-all-dev -y)
 
@@ -71,6 +71,38 @@ LexicalCast;
 //map/unordered_map 支持 key = std::string
 // Config::Lookup(key), key一样，类型不同，不会报错，need 处理。
 ```
+
+自定义类型，需要实现skt::LexicalCast的偏特化，实现之后就可以支持Config解析自定义类型，且自定义类型可以与常规stl容器一起使用。
+
+配置的事件机制：当一个配置项发生修改的时候，可以反向通知相应的代码，回调。
+
+# 日志系统整合配置系统
+```yaml
+logs:
+    - name: root
+      level: (debug, info, warn, error, fatal)
+      formatter: '%d%T%p%T%t%m%N'
+      appender: 
+        - type: (StdoutLogAppender, FileLogAppender)
+          level: (debug,...) #appender's level
+          file: /logs/xxx.log
+```
+
+```cpp
+  skt::Logger g_logger = 
+  skt::LoggerMgr::GetInstance()->getLogger(name);
+  SKT_LOG_INFO(g_logger) << "xxx log";
+```
+
+```cpp
+static Logger::ptr g_log = SKT_LOG_NAME("system");//prev:m_root, cur:m_system->m_root，当logger的appenders为空，使用root写logger
+```
+
+```cpp
+//定义LogDefine and LogAppenderDefine， 偏特化LexicalCast，
+//实现日志配置解析
+```
+
 ## 协程库封装
 
 ## socket函数库
