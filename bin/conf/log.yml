@@ -4,12 +4,13 @@ logs:
       formatter: '%d%T%m%n'
       appenders:
           - type: FileLogAppender
-            file: /apps/logs/sylar/root.txt
+            file: /home/skt/CLionProjects/LearnWeb/build/root.txt
           - type: StdoutLogAppender
     - name: system
-      level: info
+      level: debug
       formatter: '%d%T%m%n'
       appenders:
           - type: FileLogAppender
-            file: /apps/logs/sylar/system.txt
+            file: /home/skt/CLionProjects/LearnWeb/biuld/system.txt
+            formatter: '%d%T[%p]%T%m%n'
           - type: StdoutLogAppender

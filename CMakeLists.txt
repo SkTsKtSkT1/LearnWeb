@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(skt_learn_web)
 
 set(CMAKE_VERBOSE_MAKEFILE ON) #-rdynamic -O0
-set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS}  -rdynamic -o0 -g -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function")
+set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS}  -rdynamic -O0 -ggdb -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function")
 
 include_directories(.)
 include_directories(/usr/local/include)

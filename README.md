@@ -43,7 +43,7 @@ Config --> Yaml（https://www.runoob.com/w3cnote/yaml-intro.html）
 - Boost required (sudo apt install libboost-all-dev -y)
 
 yaml-cpp  github
-mkdir build && cd build && camke .. && sudo make install
+mkdir build && cd build && cmake .. && sudo make install
 
 ```cpp
 YAML::Node node = YAML::LoadFile(filename)
@@ -89,8 +89,7 @@ logs:
 ```
 
 ```cpp
-  skt::Logger g_logger = 
-  skt::LoggerMgr::GetInstance()->getLogger(name);
+  skt::Logger g_logger = skt::LoggerMgr::GetInstance()->getLogger(name);
   SKT_LOG_INFO(g_logger) << "xxx log";
 ```
 
@@ -102,6 +101,14 @@ static Logger::ptr g_log = SKT_LOG_NAME("system");//prev:m_root, cur:m_system->m
 //定义LogDefine and LogAppenderDefine， 偏特化LexicalCast，
 //实现日志配置解析
 ```
+
+```cpp
+
+```
+
+遗留问题：
+1. -[ ] appender定义的formatter读取yaml时，没有被初始化
+2. -[ ] 去掉额外的调试日志
 
 ## 协程库封装
 

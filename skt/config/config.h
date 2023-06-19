@@ -285,17 +285,19 @@ public:
     }
 
     const T getValue() const {return m_val;}
+
     void setValue(const T& v) {
         //if the value is changed
         if(v == m_val){
             return;
         }else{
-            for(auto& i : m_cbs){
+            for(auto& i : m_cbs){ //在这里实现改变参数调用回调函数
                 i.second(m_val, v);
             }
         }
         m_val = v;
     }
+
     std::string getTypeName() const override {return typeid(T).name();}
 
     void addListener(uint64_t key, on_change_cb cb){

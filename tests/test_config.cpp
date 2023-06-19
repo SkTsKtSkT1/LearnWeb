@@ -52,7 +52,7 @@ void print_yaml(const YAML::Node& node, int level){
 
 
 void test_yaml(){
-    YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/test.yml");
+    YAML::Node root = YAML::LoadFile("/home/skt/CLionProjects/LearnWeb/bin/conf/test.yml");
     print_yaml(root, 0);
     SKT_LOG_INFO(SKT_LOG_ROOT()) << root.Scalar();
 }
@@ -89,7 +89,7 @@ void test_config(){
     XX_MAP(g_str_int_map_value_config, str_int_map, before);
     XX_MAP(g_str_int_umap_value_config, str_int_umap, before);
 
-    YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/log.yml");
+    YAML::Node root = YAML::LoadFile("/home/skt/CLionProjects/LearnWeb/bin/conf/log.yml");
     skt::Config::LoadFromYaml(root);
 
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "after: " << g_int_value_config->getValue();
@@ -188,7 +188,7 @@ void test_class(){
     XX_PM(g_person_map, "class.map before");
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "before: " << g_person_vec_map->toString();
 
-    YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/test.yml");
+    YAML::Node root = YAML::LoadFile("/home/skt/CLionProjects/LearnWeb/bin/conf/test.yml");
     skt::Config::LoadFromYaml(root);
 
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "after: " << g_person->getValue().toString() << " - " << g_person->toString();
@@ -196,11 +196,18 @@ void test_class(){
     SKT_LOG_INFO(SKT_LOG_ROOT()) << "after: " << g_person_vec_map->toString();
 }
 
-void test_log(){
-    std::cout << skt::LoggerMgr::GetInstance()->toYamlString() << std::endl; 
-    YAML::Node root = YAML::LoadFile("/home/skt/skt/LearnWeb/bin/conf/log.yml");
+void test_log() {
+    static skt::Logger::ptr system_log = SKT_LOG_NAME("system");
+    SKT_LOG_INFO(system_log) << "hello system" << std::endl;
+
+    std::cout << skt::LoggerMgr::GetInstance()->toYamlString() << std::endl;
+    YAML::Node root = YAML::LoadFile("/home/skt/CLionProjects/LearnWeb/bin/conf/log.yml");
+    skt::Config::LoadFromYaml(root);
     std::cout << "=============" << std::endl;
     std::cout << skt::LoggerMgr::GetInstance()->toYamlString() << std::endl;
+    std::cout << "=============" << std::endl;
+    std::cout << root << std::endl;
+    SKT_LOG_INFO(system_log) << "hello system" << std::endl;
 }
 
 int main(int argc, char** argv){

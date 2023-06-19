@@ -39,14 +39,14 @@
     skt::LogEventWrap(skt::LogEvent::ptr(new skt::LogEvent(logger, level, \
                     __FILE__, __LINE__, 0, skt::GetThreadId(),\
                     skt::GetFiberId(), time(0)))).getEvent()->format(fmt, __VA_ARGS__)
+//deference between ##__VA_ARGS__ and __VA_ARGS__
+#define SKT_LOG_FMT_DEBUG(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::DEBUG, fmt, ##__VA_ARGS__)
+#define SKT_LOG_FMT_INFO(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::INFO, fmt, ##__VA_ARGS__)
+#define SKT_LOG_FMT_WARN(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::WARN, fmt, ##__VA_ARGS__)
+#define SKT_LOG_FMT_ERROR(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::ERROR, fmt, ##__VA_ARGS__)
+#define SKT_LOG_FMT_FATAL(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::FATAL, fmt, ##__VA_ARGS__)
 
-#define SKT_LOG_FMT_DEBUG(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::DEBUG, fmt, __VA_ARGS__)
-#define SKT_LOG_FMT_INFO(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::INFO, fmt, __VA_ARGS__)
-#define SKT_LOG_FMT_WARN(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::WARN, fmt, __VA_ARGS__)
-#define SKT_LOG_FMT_ERROR(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::ERROR, fmt, __VA_ARGS__)
-#define SKT_LOG_FMT_FATAL(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::FATAL, fmt, __VA_ARGS__)
-
-#define SKT_LOG_ROOT() skt:: LoggerMgr::GetInstance()->getRoot()
+#define SKT_LOG_ROOT() skt::LoggerMgr::GetInstance()->getRoot()
 
 #define SKT_LOG_NAME(name) skt::LoggerMgr::GetInstance()->getLogger(name)
 
@@ -145,13 +145,14 @@ private:
 
 //日志输出地
 class LogAppender{
+friend class Logger;
 public:
     typedef std::shared_ptr<LogAppender> ptr;
     virtual ~LogAppender() {}; //因为可能需要设定输出地方
 
     virtual void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) = 0;
     virtual std::string toYamlString() = 0;
-    void setFormatter(LogFormatter::ptr val){ m_formatter = val;}
+    void setFormatter(LogFormatter::ptr val);
     LogFormatter::ptr getFormatter() const {return m_formatter;}
 
     LogLevel::Level getLevel() const {return m_level;}
@@ -159,6 +160,7 @@ public:
 
 protected: //子类需要使用
     LogLevel::Level m_level = LogLevel::DEBUG;
+    bool m_hasFormatter = false;
     LogFormatter::ptr m_formatter;
 };
 
