@@ -11,6 +11,6 @@ logs:
       formatter: '%d%T%m%n'
       appenders:
           - type: FileLogAppender
-            file: /home/skt/CLionProjects/LearnWeb/biuld/system.txt
+            file: /home/skt/CLionProjects/LearnWeb/build/system.txt
             formatter: '%d%T[%p]%T%m%n'
           - type: StdoutLogAppender

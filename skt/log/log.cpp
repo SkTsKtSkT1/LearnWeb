@@ -120,6 +120,11 @@ void Logger::clearAppenders(){
 
 void Logger::setFormatter(LogFormatter::ptr val){
     m_formatter = val;
+    for(auto& i : m_appenders){
+        if(!i->m_hasFormatter){
+            i->m_formatter = m_formatter;
+        }
+    }
 }
 
 void Logger::setFormatter(const std::string& val){
@@ -128,8 +133,9 @@ void Logger::setFormatter(const std::string& val){
         std::cout<< "Logger setFormatter name =" << m_name << " value = " << val << " invalid formatter" << std::endl;
         return ;
     }
-    m_formatter = new_val;
+    //m_formatter = new_val;
     //m_formatter.reset(new skt::LogFormatter(val));
+    setFormatter(new_val);
 }
 
 LogFormatter::ptr Logger::getFormatter() {
