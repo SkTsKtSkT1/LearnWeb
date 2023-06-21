@@ -6,4 +6,4 @@ cd build \
 	&& make clean\
 	&& cmake ..\
 	&& make -j4\
-	&& ../bin/test_config
+	&& ../bin/test_thread

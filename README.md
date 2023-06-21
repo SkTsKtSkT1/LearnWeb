@@ -110,6 +110,12 @@ static Logger::ptr g_log = SKT_LOG_NAME("system");//prev:m_root, cur:m_system->m
 2. -[X] 去掉额外的调试日志
 3. -[X] 文件名的问题(输出相对路径) redefine cmake的__FILE__
 
+P20 for review the log and config.
+
+# 线程库
+
+Thread，Mutex
+
 ## 协程库封装
 
 ## socket函数库

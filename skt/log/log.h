@@ -68,16 +68,16 @@ public:
     };
 
     static const char* ToString(LogLevel::Level level);
-    
+
     static LogLevel::Level FromString(const std::string& str);
 };
 
 class LogEvent{
 public:
     typedef std::shared_ptr<LogEvent> ptr;
-    LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level, 
-            const char* file, int32_t line, uint32_t elapse,
-            uint32_t thread_id, uint32_t fiber_id, uint64_t time);
+    LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level,
+             const char* file, int32_t line, uint32_t elapse,
+             uint32_t thread_id, uint32_t fiber_id, uint64_t time);
 
     const char* getFile() const {return m_file;}
     int32_t getLine() const {return m_line;}
@@ -109,7 +109,7 @@ class LogEventWrap{
 public:
     LogEventWrap(LogEvent::ptr e);
     ~LogEventWrap();
-    
+
     LogEvent::ptr getEvent() const {return m_event;}
     std::stringstream& getSS();
 private:
@@ -145,7 +145,7 @@ private:
 
 //日志输出地
 class LogAppender{
-friend class Logger;
+    friend class Logger;
 public:
     typedef std::shared_ptr<LogAppender> ptr;
     virtual ~LogAppender() {}; //因为可能需要设定输出地方
@@ -156,7 +156,7 @@ public:
     LogFormatter::ptr getFormatter() const {return m_formatter;}
 
     LogLevel::Level getLevel() const {return m_level;}
-    void setLevel(LogLevel::Level val) {m_level = val;} 
+    void setLevel(LogLevel::Level val) {m_level = val;}
 
 protected: //子类需要使用
     LogLevel::Level m_level = LogLevel::DEBUG;
@@ -167,12 +167,12 @@ protected: //子类需要使用
 
 //日志输出器
 class Logger : public std::enable_shared_from_this<Logger>{
-friend class LoggerManager;
+    friend class LoggerManager;
 public:
     typedef std::shared_ptr<Logger> ptr;
 
     Logger(const std::string& name = "root");
-    void log(LogLevel::Level level, LogEvent::ptr event); 
+    void log(LogLevel::Level level, LogEvent::ptr event);
 
     void debug(LogEvent::ptr event);
     void info(LogEvent::ptr event);
