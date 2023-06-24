@@ -114,7 +114,13 @@ P20 for review the log and config.
 
 # 线程库
 
-Thread，Mutex
+Thread，Mutex, Pthread
+
+pthread pthread_create
+
+互斥量 mutex 
+
+信号量 semaphore
 
 ## 协程库封装
 

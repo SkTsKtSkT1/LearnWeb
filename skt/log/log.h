@@ -16,6 +16,7 @@
 #include "thread"
 #include "../util/util.h"
 #include "../singleton/singleton.h"
+#include "../thread/thread.h"
 //m_level表示记录大于该level的日志
 
 
@@ -148,12 +149,14 @@ class LogAppender{
     friend class Logger;
 public:
     typedef std::shared_ptr<LogAppender> ptr;
+    typedef skt::NullMutex MutexType;
+
     virtual ~LogAppender() {}; //因为可能需要设定输出地方
 
     virtual void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) = 0;
     virtual std::string toYamlString() = 0;
     void setFormatter(LogFormatter::ptr val);
-    LogFormatter::ptr getFormatter() const {return m_formatter;}
+    LogFormatter::ptr getFormatter();
 
     LogLevel::Level getLevel() const {return m_level;}
     void setLevel(LogLevel::Level val) {m_level = val;}
@@ -161,6 +164,8 @@ public:
 protected: //子类需要使用
     LogLevel::Level m_level = LogLevel::DEBUG;
     bool m_hasFormatter = false;
+
+    MutexType m_mutex;//写比较多
     LogFormatter::ptr m_formatter;
 };
 
@@ -170,6 +175,7 @@ class Logger : public std::enable_shared_from_this<Logger>{
     friend class LoggerManager;
 public:
     typedef std::shared_ptr<Logger> ptr;
+    typedef skt::NullMutex MutexType;
 
     Logger(const std::string& name = "root");
     void log(LogLevel::Level level, LogEvent::ptr event);
@@ -198,6 +204,7 @@ private:
     std::string m_name;         //日志名称
     LogLevel::Level m_level; //日志级别
     std::list<LogAppender::ptr> m_appenders;//Appender集合
+    MutexType m_mutex;
     LogFormatter::ptr m_formatter;
     Logger::ptr m_root;
 };
@@ -227,6 +234,8 @@ private:
 //管理所有的logger
 class LoggerManager{
 public:
+    typedef skt::NullMutex MutexType;
+
     LoggerManager();
     Logger::ptr getLogger(const std::string& name);
 
@@ -234,6 +243,7 @@ public:
     Logger::ptr getRoot() const {return m_root;}
     std::string toYamlString();
 private:
+    MutexType m_mutex;
     std::map<std::string, Logger::ptr> m_loggers;
     Logger::ptr m_root;
 };

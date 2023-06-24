@@ -3,11 +3,33 @@
 #include "../util/util.h"
 
 namespace  skt{
-
 static thread_local Thread* t_thread = nullptr;
 static thread_local std::string t_thread_name = "UNKNOW";
 
 static skt::Logger::ptr g_logger = SKT_LOG_NAME("system");
+
+Semaphore::Semaphore(uint32_t count){
+    if(sem_init(&m_semaphore, 0, count)){
+        throw std::logic_error("sem_init error");
+    }
+}
+
+Semaphore::~Semaphore(){
+    sem_destroy(&m_semaphore);
+}
+
+void Semaphore::wait(){
+    if(sem_wait(&m_semaphore)){
+        throw std::logic_error("sem_wait error");
+    }
+
+}
+
+void Semaphore::notify(){
+    if(sem_post(&m_semaphore)){
+        throw std::logic_error("sem_post error");
+    }
+}
 
 Thread* Thread::GetThis(){
     return t_thread;
@@ -23,7 +45,9 @@ void Thread::setName(const std::string &name) {
     t_thread_name = name;
 }
 
-Thread::Thread(std::function<void()> cb, const std::string& name){
+Thread::Thread(std::function<void()> cb, const std::string& name)
+    :m_cb(cb)
+    ,m_name(name){
     if(name.empty()){
         m_name = "UNKNOW";
     }
@@ -32,6 +56,7 @@ Thread::Thread(std::function<void()> cb, const std::string& name){
         SKT_LOG_ERROR(g_logger) << "pthread_create thread fail, rt=" << rt << " name=" << name;
         throw std::logic_error("pthread_create error");
     }
+    m_semaphore.wait();
 }
 
 
@@ -56,13 +81,15 @@ void Thread::join(){
 void* Thread::run(void* arg){
     Thread* thread = (Thread*) arg;
     t_thread = thread;
+    t_thread_name = thread->m_name;
     thread->m_id = skt::GetThreadId();
     pthread_setname_np(pthread_self(), thread->m_name.substr(0, 15).c_str());
 
     std::function<void()> cb;
     cb.swap(thread->m_cb);
+    thread->m_semaphore.notify();
     cb();
-    return nullptr;
+    return 0;
 }
 
 
