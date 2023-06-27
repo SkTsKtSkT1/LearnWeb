@@ -50,5 +50,6 @@ int main(){
 
     SKT_LOG_INFO(g_logger) << "thread test end";
     SKT_LOG_INFO(g_logger) << "count=" << count;
+
     return 0;
 }

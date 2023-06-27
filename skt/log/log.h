@@ -149,7 +149,7 @@ class LogAppender{
     friend class Logger;
 public:
     typedef std::shared_ptr<LogAppender> ptr;
-    typedef skt::NullMutex MutexType;
+    typedef skt::Spinlock MutexType;
 
     virtual ~LogAppender() {}; //因为可能需要设定输出地方
 
@@ -175,7 +175,7 @@ class Logger : public std::enable_shared_from_this<Logger>{
     friend class LoggerManager;
 public:
     typedef std::shared_ptr<Logger> ptr;
-    typedef skt::NullMutex MutexType;
+    typedef skt::Spinlock MutexType;
 
     Logger(const std::string& name = "root");
     void log(LogLevel::Level level, LogEvent::ptr event);
@@ -229,12 +229,13 @@ public:
 private:
     std::string m_filename;
     std::ofstream m_filestream;
+    uint64_t m_lastTime;
 };
 
 //管理所有的logger
 class LoggerManager{
 public:
-    typedef skt::NullMutex MutexType;
+    typedef skt::Spinlock MutexType;
 
     LoggerManager();
     Logger::ptr getLogger(const std::string& name);

@@ -233,8 +233,15 @@ FileLogAppender::FileLogAppender(const std::string &filename) : m_filename(filen
 void FileLogAppender::log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) {
     //reopen(); //add by skt, because the file can't create properly.
     if(level >= m_level){
+        uint64_t now = time(0);
+        if(now != m_lastTime){
+            reopen();
+            m_lastTime = now;
+        }
         MutexType::Lock lock(m_mutex);
-        m_filestream << m_formatter->format(logger, level, event);
+        if(!(m_filestream << m_formatter->format(logger, level, event))){
+            std::cout << "error" << std::endl;
+        };
     }
 }
 
@@ -664,7 +671,7 @@ skt::ConfigVar<std::set<LogDefine>>::ptr g_log_defines = skt::Config::Lookup(
 //注册事件，全局对象在main之前构造
 struct LogIniter{
     LogIniter(){
-        g_log_defines->addListener(0xF1E231, [](const std::set<LogDefine>& old_value, const std::set<LogDefine>& new_value){
+        g_log_defines->addListener([](const std::set<LogDefine>& old_value, const std::set<LogDefine>& new_value){
             SKT_LOG_INFO(SKT_LOG_ROOT()) << "on_logger_conf_changed";
             for(auto& i : new_value){
                 auto it = old_value.find(i);

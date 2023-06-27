@@ -122,6 +122,12 @@ pthread pthread_create
 
 信号量 semaphore
 
+和log来整合, Logger, Appender,
+
+Spinlock 替换 Mutex, 写文件，周期性的reopen()，防止文件被删除感知不到文件变化造成的问题（磁盘上被占用但是无法记录下来）
+
+Config, RWMutex
+
 ## 协程库封装
 
 ## socket函数库
