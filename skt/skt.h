@@ -7,5 +7,6 @@
 #include "skt/util/util.h"
 #include "skt/thread/thread.h"
 #include "vector"
+#include "skt/macro/macro.h"
 
 #endif

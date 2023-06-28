@@ -129,7 +129,10 @@ Spinlock 替换 Mutex, 写文件，周期性的reopen()，防止文件被删除�
 Config, RWMutex
 
 ## 协程库封装
+协程是用户态，线程是系统切换。
 
+定义协程接口
+ucontext_t
 ## socket函数库
 
 ## http协议开发

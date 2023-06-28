@@ -47,6 +47,11 @@ add_dependencies(test_thread skt)
 redefine_file_macro(test_thread) #__FILE__
 target_link_libraries(test_thread ${LIBS})
 
+add_executable(test_utils tests/test_utils.cpp)
+add_dependencies(test_utils skt)
+redefine_file_macro(test_utils) #__FILE__
+target_link_libraries(test_utils ${LIBS})
+
 
 SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)
