@@ -25,7 +25,7 @@
     if(logger->getLevel() <= level) \
         skt::LogEventWrap(skt::LogEvent::ptr(new skt::LogEvent(logger, level, \
                         __FILE__, __LINE__, 0, skt::GetThreadId(),\
-                skt::GetFiberId(), time(0)))).getSS()
+                skt::GetFiberId(), time(0), skt::Thread::GetName()))).getSS()
 
 
 #define SKT_LOG_DEBUG(logger)  SKT_LOG_LEVEL(logger, skt::LogLevel::DEBUG)
@@ -39,7 +39,7 @@
     if(logger->getLevel() <= level) \
     skt::LogEventWrap(skt::LogEvent::ptr(new skt::LogEvent(logger, level, \
                     __FILE__, __LINE__, 0, skt::GetThreadId(),\
-                    skt::GetFiberId(), time(0)))).getEvent()->format(fmt, __VA_ARGS__)
+                    skt::GetFiberId(), time(0), skt::Thread::GetName()))).getEvent()->format(fmt, __VA_ARGS__)
 //deference between ##__VA_ARGS__ and __VA_ARGS__
 #define SKT_LOG_FMT_DEBUG(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::DEBUG, fmt, ##__VA_ARGS__)
 #define SKT_LOG_FMT_INFO(logger, fmt, ...)  SKT_LOG_FMT_LEVEL(logger, skt::LogLevel::INFO, fmt, ##__VA_ARGS__)
@@ -78,7 +78,8 @@ public:
     typedef std::shared_ptr<LogEvent> ptr;
     LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level,
              const char* file, int32_t line, uint32_t elapse,
-             uint32_t thread_id, uint32_t fiber_id, uint64_t time);
+             uint32_t thread_id, uint32_t fiber_id, uint64_t time,
+             const std::string& thread_name);
 
     const char* getFile() const {return m_file;}
     int32_t getLine() const {return m_line;}
@@ -90,6 +91,7 @@ public:
     std::shared_ptr<Logger> getLogger() const {return m_logger;}
     std::stringstream& getSS() {return m_ss;}
     LogLevel::Level getLevel() const {return m_level;}
+    std::string getThreadName() const {return m_threadName;}
 
     void format(const char* fmt, ...);
     void format(const char* fmt, va_list al);
@@ -101,7 +103,7 @@ private:
     uint32_t m_fiberId = 0; //协程id
     uint64_t m_time;        //时间戳
     std::stringstream m_ss;  //日志内容
-
+    std::string m_threadName;
     std::shared_ptr<Logger> m_logger;
     LogLevel::Level m_level;
 };

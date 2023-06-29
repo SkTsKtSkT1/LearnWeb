@@ -256,7 +256,7 @@ public:
 
     static Thread* GetThis();
     static const std::string& GetName();
-    static void setName(const std::string& name);
+    static void SetName(const std::string& name);
 private: //disable
     Thread(const Thread&) = delete;
     Thread(const Thread&&) = delete;

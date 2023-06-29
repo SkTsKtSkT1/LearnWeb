@@ -60,13 +60,15 @@ LogEventWrap::~LogEventWrap(){
 
 LogEvent::LogEvent(std::shared_ptr<Logger> logger, LogLevel::Level level, 
         const char* file, int32_t line, uint32_t elapse,
-        uint32_t thread_id, uint32_t fiber_id, uint64_t time) :
+        uint32_t thread_id, uint32_t fiber_id, uint64_t time,
+                   const std::string& thread_name) :
         m_file(file)
         ,m_line(line)
         ,m_elapse(elapse)
         ,m_threadId(thread_id)
         ,m_fiberId(fiber_id)
         ,m_time(time)
+        ,m_threadName(thread_name)
         ,m_logger(logger)
         ,m_level(level){
 }
@@ -94,7 +96,7 @@ void LogEvent::format(const char* fmt, va_list al){
 
 Logger::Logger(const std::string &name) : m_name(name), m_level(LogLevel::DEBUG){
     //%d{%Y-%m-%d %H:%M:%S}%T%t%T%N%T%F%T[%p]%T[%c]%T%f:%l%T%m%n
-    m_formatter.reset(new LogFormatter("%d{%Y-%m-%d %H:%M:%S}%T%t%T%T%F%T[%p]%T[%c]%T%f:%l%T%m%n"));
+    m_formatter.reset(new LogFormatter("%d{%Y-%m-%d %H:%M:%S}%T%t%T%N%T%F%T[%p]%T[%c]%T%f:%l%T%m%n"));
 }
 
 void Logger::addAppender(LogAppender::ptr appender) {
@@ -337,6 +339,14 @@ public:
     }
 };
 
+class FiberNameFormatItem : public LogFormatter::FormatItem{
+public:
+    FiberNameFormatItem(const std::string& str = "") {}
+    void format(std::ostream& os, Logger::ptr logger, LogLevel::Level level, LogEvent::ptr event) override{
+        os << event->getThreadName();
+    }
+};
+
 class FiberIdFormatItem : public LogFormatter::FormatItem{
 public:
     FiberIdFormatItem(const std::string& str = "") {}
@@ -498,6 +508,7 @@ void LogFormatter::init() {
                 XX(l, LineFormatItem), //%l 行数
                 XX(T, TabFormatItem), //%T table
                 XX(F, FiberIdFormatItem), //%F fiberId
+                XX(N, FiberNameFormatItem),
 #undef  XX
     };   
     for(auto& i :vec){

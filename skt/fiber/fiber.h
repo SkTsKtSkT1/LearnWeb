@@ -17,13 +17,16 @@ public:
         HOLD,
         EXEC,
         TERM,
-        READY  //ready for exec;
+        READY,  //ready for exec;
+        EXCEPT
     };
 private:
     Fiber();
 public:
     Fiber(std::function<void()> cb, size_t stacksize = 0);
     ~Fiber();
+
+    uint64_t getId() const {return m_id;}
 
     //重置协程函数，并重置状态 INIT TERM
     void reset(std::function<void()> cb);
@@ -46,6 +49,7 @@ public:
     static uint64_t TotalFibers();
 
     static void MainFunc();
+    static uint64_t GetFiberId();
 private:
     uint64_t m_id = 0;
     uint32_t m_stacksize = 0;

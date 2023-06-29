@@ -1,6 +1,7 @@
 #include "util.h"
 #include "execinfo.h"
 #include "skt/log/log.h"
+#include "skt/fiber/fiber.h"
 
 namespace skt{
 
@@ -11,7 +12,7 @@ pid_t GetThreadId(){
 }
 
 u_int32_t GetFiberId(){
-    return 0;
+    return skt::Fiber::GetFiberId();
 }
 
 void Backtrace(std::vector<std::string>& bt, int size, int skip){

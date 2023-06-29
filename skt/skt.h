@@ -8,5 +8,6 @@
 #include "skt/thread/thread.h"
 #include "vector"
 #include "skt/macro/macro.h"
+#include "skt/fiber/fiber.h"
 
 #endif
