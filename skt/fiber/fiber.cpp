@@ -174,7 +174,7 @@ void Fiber::MainFunc() {
     }
     auto raw_ptr = cur.get();
     cur.reset();
-    raw_ptr -> swapOut();
+    raw_ptr -> swapOut();//return main fiber
     SKT_ASSERT2(false, "never reach");
 }
 

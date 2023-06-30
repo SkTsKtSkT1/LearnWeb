@@ -506,9 +506,9 @@ void LogFormatter::init() {
                 XX(d, DateTimeFormatItem), //%d 时间
                 XX(f, FileNameFormatItem), //%f 文件名
                 XX(l, LineFormatItem), //%l 行数
-                XX(T, TabFormatItem), //%T table
+                XX(T, TabFormatItem), //%T tab
                 XX(F, FiberIdFormatItem), //%F fiberId
-                XX(N, FiberNameFormatItem),
+                XX(N, FiberNameFormatItem), //%N 线程名称
 #undef  XX
     };   
     for(auto& i :vec){

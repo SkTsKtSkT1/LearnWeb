@@ -140,8 +140,14 @@ Thread -> main_fiber <-------> sub_fiber
               v
             sub_fiber
 ```
-```
 
+协程调度模块Schedule
+```
+       1  -  N     1   -  M
+schedule --> thread ----> fiber
+1.线程池，分配一组线程
+2.协程调度器，将协程指定到相应的线程上去执行
+3.
 ```
 ## socket函数库
 

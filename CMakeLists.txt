@@ -20,6 +20,8 @@ set(LIB_SRC
      skt/config/config.cpp
      skt/thread/thread.cpp
      skt/fiber/fiber.cpp
+     skt/scheduler/scheduler.cpp
+     skt/mutex/mutex.cpp
 )
 
 add_library(skt SHARED ${LIB_SRC})
