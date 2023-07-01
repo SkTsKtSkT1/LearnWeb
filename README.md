@@ -148,6 +148,13 @@ schedule --> thread ----> fiber
 1.线程池，分配一组线程
 2.协程调度器，将协程指定到相应的线程上去执行
 3.
+
+N : M
+
+m_threads 
+<function<void()>, fiber, thread> m_fibers
+
+schedule(func/fiber)
 ```
 ## socket函数库
 

@@ -9,11 +9,11 @@ static Logger::ptr g_logger = SKT_LOG_NAME("system");
 
 static std::atomic<uint64_t> s_fiber_id {0};
 static std::atomic<uint64_t> s_fiber_count {0};
-
-static thread_local Fiber* t_fiber = nullptr;
+//https://zhuanlan.zhihu.com/p/77585472
+static thread_local Fiber* t_fiber = nullptr; //该线程下的某一fiber
 //static thread_local std::shared_ptr<Fiber::ptr> t_threadFiber = nullptr;
 
-static thread_local Fiber::ptr t_threadFiber = nullptr;
+static thread_local Fiber::ptr t_threadFiber = nullptr; //store the main fiber
 
 static ConfigVar<uint32_t>::ptr g_fiber_stack_size = Config::Lookup<uint32_t>("fiber.stack_size", 128 * 1204, "fiber stack size");
 

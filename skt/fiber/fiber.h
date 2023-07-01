@@ -27,7 +27,7 @@ public:
     ~Fiber();
 
     uint64_t getId() const {return m_id;}
-
+    Fiber::State const getState() const {return m_state;};
     //重置协程函数，并重置状态 INIT TERM
     void reset(std::function<void()> cb);
     //切换到当前协程执行
