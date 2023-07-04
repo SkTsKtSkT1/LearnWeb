@@ -60,6 +60,11 @@ add_dependencies(test_fiber skt)
 redefine_file_macro(test_fiber) #__FILE__
 target_link_libraries(test_fiber ${LIBS})
 
+add_executable(test_scheduler tests/test_scheduler.cpp)
+add_dependencies(test_scheduler skt)
+redefine_file_macro(test_scheduler) #__FILE__
+target_link_libraries(test_scheduler ${LIBS})
+
 SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)
 

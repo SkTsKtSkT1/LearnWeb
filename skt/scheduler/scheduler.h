@@ -20,8 +20,8 @@ public:
 
     static Scheduler* GetThis();
     static Fiber* GetMainFiber();
-    void Start();
-    void Stop();
+    void start();
+    void stop();
 
     template<class FiberOrCb>
     void schedule(FiberOrCb fc, int thread = -1){
@@ -55,6 +55,7 @@ protected:
     void run();
     virtual bool stopping();
     void setThis();
+    virtual void idle(); // to solve the scheduler with no work and make the thread awake
 private:
     template<class FiberOrCb>
     bool scheduleNoLock(FiberOrCb fc, int thread){
@@ -108,12 +109,11 @@ private:
     std::list<FiberAndThread> m_fibers;
     Fiber::ptr m_rootFiber;
     std::string m_name;
-
 protected:
     std::vector<int> m_threadIds;
     size_t m_threadCount = 0;
-    size_t m_activeThreadCount = 0;
-    size_t m_idleThreadCount = 0;
+    std::atomic<size_t> m_activeThreadCount = {0};
+    std::atomic<size_t> m_idleThreadCount = {0};
     bool m_stopping = true;
     bool m_autoStop = false;
     int m_rootThread = 0; //usercaller id

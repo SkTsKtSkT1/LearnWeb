@@ -1,4 +1,4 @@
-# LearnWeb
+  # LearnWeb
 ![last-commit](https://img.shields.io/github/last-commit/SkTsKtSkT1/LearnWeb)&emsp;![actions](https://img.shields.io/github/actions/workflow/status/SkTsKtSkT1/LearnWeb/actions.yml)&emsp;![codesize](https://img.shields.io/github/languages/code-size/SkTsKtSkT1/LearnWeb)&emsp;![codepercent](https://img.shields.io/github/languages/top/SkTsKtSkT1/LearnWeb)
 
 https://www.bilibili.com/video/BV184411s7qF
@@ -155,6 +155,16 @@ m_threads
 <function<void()>, fiber, thread> m_fibers
 
 schedule(func/fiber)
+
+start()
+stop()
+run()
+
+1.设置当前线程的scheduler
+2.设置当前 线程的run、fiber
+3.协程调度循环while(true)
+    1.协程消息队列是否有任务
+    2.无任务执行，执行idle
 ```
 ## socket函数库
 

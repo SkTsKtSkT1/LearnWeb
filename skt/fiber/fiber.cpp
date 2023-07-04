@@ -2,6 +2,7 @@
 #include "../config/config.h"
 #include "../macro/macro.h"
 #include "../log/log.h"
+#include "../scheduler/scheduler.h"
 #include "atomic"
 
 namespace skt{
@@ -53,7 +54,7 @@ Fiber::Fiber(){
 }
 
 //this is the real fiber and need the stack size;
-Fiber::Fiber(std::function<void()> cb, size_t stacksize)
+Fiber::Fiber(std::function<void()> cb, size_t stacksize, bool use_caller)
     :m_id(++s_fiber_id)
     ,m_cb(cb){
     ++s_fiber_count;
@@ -66,8 +67,11 @@ Fiber::Fiber(std::function<void()> cb, size_t stacksize)
     m_ctx.uc_link = nullptr;
     m_ctx.uc_stack.ss_sp = m_stack;
     m_ctx.uc_stack.ss_size = m_stacksize;
-
-    makecontext(&m_ctx, &Fiber::MainFunc, 0);
+    if(!use_caller){
+        makecontext(&m_ctx, &Fiber::MainFunc, 0);
+    }else{
+        makecontext(&m_ctx, &Fiber::CallerMainFunc, 0);
+    }
     SKT_LOG_DEBUG(g_logger) << "Fiber::Fiber id=" << m_id;
 }
 
@@ -139,23 +143,40 @@ void Fiber::reset(std::function<void()> cb) {
     m_state = INIT;
 }
 
+void Fiber::call(){
+    SetThis(this); //当前的协程
+    m_state = EXEC;
+    SKT_LOG_DEBUG(g_logger) << getId();
+    if(swapcontext(&t_threadFiber->m_ctx, &m_ctx)){
+        SKT_ASSERT2(false, "swapcontext");
+    }
+}
+
+void Fiber::back() {
+    SetThis(t_threadFiber.get());
+    if(swapcontext(&m_ctx, &t_threadFiber->m_ctx)) {
+        SKT_ASSERT2(false, "swapcontext");
+    }
+}
+
 //一定是子协程，切换到当前协程执行
 void Fiber::swapIn() {
-    SetThis(this);
+    SetThis(this); //当前的协程
     SKT_ASSERT(m_state != EXEC);
     m_state = EXEC;
 
-    if(swapcontext(&(t_threadFiber)->m_ctx, &m_ctx)){
+    if(swapcontext(&Scheduler::GetMainFiber()->m_ctx, &m_ctx)){
         SKT_ASSERT2(false, "swapcontext");
     }
 }
 
 void Fiber::swapOut() {
-    SetThis(t_threadFiber.get());
 
-    if(swapcontext(&m_ctx, &(t_threadFiber)->m_ctx)){
+    SetThis(Scheduler::GetMainFiber());
+    if(swapcontext(&m_ctx, &Scheduler::GetMainFiber()->m_ctx)){
         SKT_ASSERT2(false, "swapcontext");
     }
+
 }
 
 void Fiber::MainFunc() {
@@ -167,7 +188,10 @@ void Fiber::MainFunc() {
         cur->m_state = TERM;
     }catch(std::exception& ex){
         cur->m_state = EXCEPT;
-        SKT_LOG_ERROR(g_logger) << "Fiber Except: " << ex.what();
+        SKT_LOG_ERROR(g_logger) << "Fiber Except: " << ex.what()
+            << "fiber_id=" << cur->getId()
+            << std::endl
+            <<skt::BacktraceToString();
     } catch (...){
         cur->m_state = EXCEPT;
         SKT_LOG_ERROR(g_logger) << "Fiber Except";
@@ -175,7 +199,30 @@ void Fiber::MainFunc() {
     auto raw_ptr = cur.get();
     cur.reset();
     raw_ptr -> swapOut();//return main fiber
-    SKT_ASSERT2(false, "never reach");
+    SKT_ASSERT2(false, "never reach fiber_id=" + std::to_string(raw_ptr->getId()));
+}
+
+void Fiber::CallerMainFunc() {
+        Fiber::ptr cur = GetThis();
+        SKT_ASSERT(cur);
+        try{
+            cur->m_cb();
+            cur->m_cb = nullptr;
+            cur->m_state = TERM;
+        }catch(std::exception& ex){
+            cur->m_state = EXCEPT;
+            SKT_LOG_ERROR(g_logger) << "Fiber Except: " << ex.what()
+                                    << "fiber_id=" << cur->getId()
+                                    << std::endl
+                                    <<skt::BacktraceToString();
+        } catch (...){
+            cur->m_state = EXCEPT;
+            SKT_LOG_ERROR(g_logger) << "Fiber Except";
+        }
+        auto raw_ptr = cur.get();
+        cur.reset();
+        raw_ptr -> back();//return main fiber
+        SKT_ASSERT2(false, "never reach fiber_id=" + std::to_string(raw_ptr->getId()));
 }
 
 }
