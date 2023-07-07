@@ -166,6 +166,35 @@ run()
     1.协程消息队列是否有任务
     2.无任务执行，执行idle
 ```
+
+``` 
+IOManager(epoll) ---> Schedule
+    |
+    |
+    v
+   idle(epoll_wait)
+   
+   信号量
+PutMessage(msg,) 信号量+1, single()
+
+message_queue
+   |
+   | ---- Thread
+   | ---- Thread
+         wait() -> 信号量-1 RecvMessage(msg,)
+         
+异步IO，等待数据返回。 epoll_wait
+
+epoll_create epoll_ctl epoll_wait
+```
+
+```
+Timer -> addTimer() --> cancel()
+
+获取当前的定时器触发离现在的时间差
+
+返回当前需要触发的定时器.etc
+```
 ## socket函数库
 
 ## http协议开发

@@ -22,6 +22,8 @@ set(LIB_SRC
      skt/fiber/fiber.cpp
      skt/scheduler/scheduler.cpp
      skt/mutex/mutex.cpp
+     skt/iomanager/iomanager.cpp
+     skt/timer/timer.cpp
 )
 
 add_library(skt SHARED ${LIB_SRC})
@@ -64,6 +66,11 @@ add_executable(test_scheduler tests/test_scheduler.cpp)
 add_dependencies(test_scheduler skt)
 redefine_file_macro(test_scheduler) #__FILE__
 target_link_libraries(test_scheduler ${LIBS})
+
+add_executable(test_iomanager tests/test_iomanager.cpp)
+add_dependencies(test_iomanager skt)
+redefine_file_macro(test_iomanager) #__FILE__
+target_link_libraries(test_iomanager ${LIBS})
 
 SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)

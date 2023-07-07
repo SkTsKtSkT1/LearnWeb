@@ -56,6 +56,8 @@ protected:
     virtual bool stopping();
     void setThis();
     virtual void idle(); // to solve the scheduler with no work and make the thread awake
+    bool hasIdleThreads() { return m_idleThreadCount > 0;}
+
 private:
     template<class FiberOrCb>
     bool scheduleNoLock(FiberOrCb fc, int thread){

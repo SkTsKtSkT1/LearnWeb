@@ -2,7 +2,7 @@
 #include "execinfo.h"
 #include "skt/log/log.h"
 #include "skt/fiber/fiber.h"
-
+#include "sys/time.h"
 namespace skt{
 
 skt::Logger::ptr g_logger = SKT_LOG_NAME("system");
@@ -40,5 +40,19 @@ std::string BacktraceToString(int size, int skip, const std::string& prefix){
     }
     return ss.str();
 }
+
+uint64_t GetCurrentMs(){
+    struct timeval tv;
+    gettimeofday(&tv, nullptr);
+    return tv.tv_sec * 1000ul + tv.tv_usec / 1000;
+}
+
+uint64_t GetCurrentUs(){
+    struct timeval tv;
+    gettimeofday(&tv, nullptr);
+    return tv.tv_sec * 1000 * 1000ul + tv.tv_usec;
+}
+
+
 
 }
