@@ -24,6 +24,7 @@ set(LIB_SRC
      skt/mutex/mutex.cpp
      skt/iomanager/iomanager.cpp
      skt/timer/timer.cpp
+     skt/hook/hook.cpp
 )
 
 add_library(skt SHARED ${LIB_SRC})
@@ -31,6 +32,7 @@ redefine_file_macro(skt) #__FILE__
 
 set(LIBS
         skt
+        dl
         pthread
         yaml-cpp)
 
@@ -71,6 +73,11 @@ add_executable(test_iomanager tests/test_iomanager.cpp)
 add_dependencies(test_iomanager skt)
 redefine_file_macro(test_iomanager) #__FILE__
 target_link_libraries(test_iomanager ${LIBS})
+
+add_executable(test_hook tests/test_hook.cpp)
+add_dependencies(test_hook skt)
+redefine_file_macro(test_hook) #__FILE__
+target_link_libraries(test_hook ${LIBS})
 
 SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)

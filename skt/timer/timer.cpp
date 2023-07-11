@@ -60,6 +60,9 @@ bool Timer::refresh() {
 }
 
 bool Timer::reset(uint64_t ms, bool from_now) {
+    if(ms == m_ms && !from_now){
+        return true;
+    }
     TimerManager::RWMutexType::WriteLock lock(m_manager->m_mutex);
     if(!m_cb){
         return false;
@@ -78,8 +81,8 @@ bool Timer::reset(uint64_t ms, bool from_now) {
     m_ms = ms;
     m_next = start + m_ms;
     m_manager->addTimer(shared_from_this(), lock);
-    it = m_manager->m_timers.insert(shared_from_this()).first;
-    m_manager->m_timers.insert(shared_from_this());
+//    it = m_manager->m_timers.insert(shared_from_this()).first;
+//    m_manager->m_timers.insert(shared_from_this());
     return true;
 }
 
@@ -145,7 +148,9 @@ void TimerManager::listExpiredCb(std::vector<std::function<void()>> &cbs) {
         }
     }
     RWMutexType::WriteLock lock(m_mutex);
-
+    if(m_timers.empty()){
+        return;
+    }
     bool rollover = detectClockRollover(now_ms);
     if(!rollover && ((*m_timers.begin())->m_next > now_ms)){
         return;
@@ -174,14 +179,14 @@ void TimerManager::listExpiredCb(std::vector<std::function<void()>> &cbs) {
 
 void TimerManager::addTimer(Timer::ptr val, RWMutexType::WriteLock& lock) {
     auto it = m_timers.insert(val).first;
-    bool at_front = (it == m_timers.begin() && !m_tickled);
+    bool at_front = (it == m_timers.begin()) && !m_tickled;
     if(at_front){
         m_tickled = true;
     }
     lock.unlock();
 
     if(at_front){
-        onTimerInsertAtFront();
+        onTimerInsertedAtFront();
     }
 }
 
@@ -192,6 +197,11 @@ bool TimerManager::detectClockRollover(uint64_t now_ms) {
     }
     m_previouseTime = now_ms;
     return rollover;
+}
+
+bool TimerManager::hasTimer() {
+    RWMutexType::ReadLock lock(m_mutex);
+    return !m_timers.empty();
 }
 
 }

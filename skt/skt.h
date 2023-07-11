@@ -9,5 +9,8 @@
 #include "skt/macro/macro.h"
 #include "skt/fiber/fiber.h"
 #include "skt/scheduler/scheduler.h"
+#include "skt/iomanager/iomanager.h"
+#include "skt/timer/timer.h"
+#include "skt/hook/hook.h"
 
 #endif

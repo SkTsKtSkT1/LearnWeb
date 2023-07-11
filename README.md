@@ -195,6 +195,24 @@ Timer -> addTimer() --> cancel()
 
 返回当前需要触发的定时器.etc
 ```
+
+```
+                [Fiber]                 [Timer]
+                   ^ N                     ^
+                   |                       |
+                   | 1                     |
+                [Thread]             [TimerManager]
+                   ^ M                     ^
+                   |                       |
+                   | 1                     |
+                [Scheduler] <---- [IOManager(epoll)]
+```
+
+## Hook
+sleep,
+
+usleep
+
 ## socket函数库
 
 ## http协议开发

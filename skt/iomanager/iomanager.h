@@ -2,17 +2,18 @@
 #define LEARNWEB_IOMANAGER_H
 
 #include "skt/scheduler/scheduler.h"
+#include "skt/timer/timer.h"
 
 namespace skt{
-class IOManager : public Scheduler{
+class IOManager : public Scheduler, public TimerManager{
 public:
     typedef std::shared_ptr<IOManager> ptr;
     typedef RWMutex RWMutexType;
 
     enum Event{
         NONE = 0x0,
-        READ = 0x1,
-        WRITE = 0x4,
+        READ = 0x1,  //EPOLLIN
+        WRITE = 0x4, //EPOLLOUT
     };
 private:
     struct FdContext{
@@ -51,8 +52,10 @@ protected:
     void tickle() override;
     bool stopping() override;
     void idle() override;
-    void contextResize(size_t size);
+    void onTimerInsertedAtFront() override;
 
+    void contextResize(size_t size);
+    bool stopping(uint64_t& timeout);
 private:
     int m_epfd = 0;
     int m_tickleFds[2];

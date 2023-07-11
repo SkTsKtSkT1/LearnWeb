@@ -1,11 +1,12 @@
 #include "scheduler.h"
 #include "../log/log.h"
 #include "../macro/macro.h"
+#include "skt/hook/hook.h"
 
 namespace skt{
 static skt::Logger::ptr g_logger = SKT_LOG_NAME("system");
 static thread_local Scheduler* t_scheduler = nullptr;
-static thread_local Fiber* t_fiber = nullptr;
+static thread_local Fiber* t_sheduler_fiber = nullptr;
 
 Scheduler::Scheduler(size_t threads, bool use_caller, const std::string &name)
     :m_name(name){
@@ -19,7 +20,7 @@ Scheduler::Scheduler(size_t threads, bool use_caller, const std::string &name)
         m_rootFiber.reset(new Fiber(std::bind(&Scheduler::run, this), 0, true));
         skt::Thread::SetName(m_name);
 
-        t_fiber = m_rootFiber.get();
+        t_sheduler_fiber = m_rootFiber.get();
         m_rootThread = skt::GetThreadId();
         m_threadIds.push_back(m_rootThread);
     }else{
@@ -41,7 +42,7 @@ Scheduler *Scheduler::GetThis() {
 }
 
 Fiber *Scheduler::GetMainFiber() {
-    return t_fiber;
+    return t_sheduler_fiber;
 }
 
 void Scheduler::start() {
@@ -69,7 +70,9 @@ void Scheduler::start() {
 void Scheduler::stop() {
     m_autoStop = true;
     if(m_rootFiber && m_threadCount == 0 && (m_rootFiber->getState() == Fiber::TERM || m_rootFiber->getState() == Fiber::INIT)){
-        SKT_LOG_INFO(g_logger) << this << "stopped";
+        //SKT_LOG_INFO(g_logger) << this << "stopped";
+
+        SKT_LOG_DEBUG(g_logger) << "scheduler stopped, fiber id=" << t_sheduler_fiber->getId();
         m_stopping = true;
 
         if(stopping()){
@@ -77,7 +80,7 @@ void Scheduler::stop() {
         }
     }
 
-    bool exit_on_this_fiber = false;
+    //bool exit_on_this_fiber = false;
     if(m_rootThread != -1){
         //this is use_caller thread;
         SKT_ASSERT(GetThis() == this);//要在这个线程中执行stop
@@ -89,7 +92,7 @@ void Scheduler::stop() {
         tickle();//唤醒线程
     }
     if(m_rootFiber){
-       tickle();
+        tickle();
     }
 
     if(m_rootFiber){
@@ -101,9 +104,9 @@ void Scheduler::stop() {
 //            }
 //            m_rootFiber->call();
 //         }
-    if(!stopping()){
-        m_rootFiber->call();
-    }
+        if(!stopping()){
+            m_rootFiber->call();
+        }
     }
 //    if(stopping()){
 //        return;
@@ -117,9 +120,9 @@ void Scheduler::stop() {
     for(auto& i :thrs){
         i->join();
     }
-    if(exit_on_this_fiber){
-        return ;
-    }
+//    if(exit_on_this_fiber){
+//        return ;
+//    }
 }
 
 void Scheduler::setThis() {
@@ -127,11 +130,12 @@ void Scheduler::setThis() {
 }
 
 void Scheduler::run() {
-    SKT_LOG_INFO(g_logger) << "run";
+    SKT_LOG_DEBUG(g_logger) << "run";
+    set_hook_enable(true);
     setThis();
 
     if(skt::GetThreadId() != m_rootThread){
-        t_fiber = Fiber::GetThis().get();
+        t_sheduler_fiber = Fiber::GetThis().get();
     }
     Fiber::ptr idle_fiber(new Fiber(std::bind(&Scheduler::idle, this)));
     Fiber::ptr cb_fiber;
@@ -159,22 +163,23 @@ void Scheduler::run() {
                 }
 
                 ft = *it;
-                m_fibers.erase(it);
+                m_fibers.erase(it++);
                 ++m_activeThreadCount;
                 is_active = true;
                 break;
             }
+            tickle_me |= it != m_fibers.end();
         }
         if(tickle_me){
             tickle();
         }
 
-        if(ft.fiber && (ft.fiber->getState() != Fiber::TERM || ft.fiber->getState() != Fiber::EXCEPT)){
+        if(ft.fiber && (ft.fiber->getState() != Fiber::TERM && ft.fiber->getState() != Fiber::EXCEPT)){ // before is || and the bug caused,如果是或，那么右边永远为真，也就是说不论什么fiber都会进入
             ft.fiber -> swapIn();
             --m_activeThreadCount;
             if(ft.fiber->getState() == Fiber::READY){
                 schedule(ft.fiber);
-            }else if(ft.fiber->getState() != Fiber::TERM || ft.fiber->getState() != Fiber::EXCEPT){
+            }else if(ft.fiber->getState() != Fiber::TERM && ft.fiber->getState() != Fiber::EXCEPT){ // before is || and the bug caused,如果是或，那么右边永远为真，也就是说不论什么fiber都会进入，因此都会转为Hold状态
                 ft.fiber->m_state = Fiber::HOLD;
             }
             ft.reset();
@@ -183,7 +188,7 @@ void Scheduler::run() {
                 cb_fiber->reset(ft.cb);
             }else{
                 cb_fiber.reset(new Fiber(ft.cb));
-                ft.fiber = nullptr;
+                //ft.fiber = nullptr;
             }
             ft.reset();
             cb_fiber->swapIn();
@@ -205,12 +210,12 @@ void Scheduler::run() {
             }
             if(idle_fiber->getState() == Fiber::TERM){
                 SKT_LOG_INFO(g_logger) << "idle fiber term";
-                tickle();
+                //tickle();
                 break;
                 //continue;
             }
 
-            m_idleThreadCount++;
+            ++m_idleThreadCount;
             idle_fiber->swapIn();
 
             --m_idleThreadCount;
