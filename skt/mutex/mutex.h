@@ -10,11 +10,10 @@
 #include "stdint.h"
 #include "atomic"
 #include "stdexcept"
-
+#include "skt/noncopyable/noncopyable.h"
 namespace skt{
 
-
-class Semaphore{
+class Semaphore : Noncopyable{
 public:
     Semaphore(uint32_t count = 0);
     ~Semaphore();
@@ -62,7 +61,7 @@ private:
 };
 
 //if 读写差不多，不分读写锁
-class Mutex{
+class Mutex : Noncopyable{
 public:
     typedef ScopedLockImpl<Mutex> Lock;
 
@@ -118,7 +117,7 @@ private:
     bool m_locked;
 };
 
-class NullMutex{
+class NullMutex : Noncopyable{
 public:
     typedef ScopedLockImpl<NullMutex> Lock;
     NullMutex(){};
@@ -127,7 +126,7 @@ public:
     void unlock(){};
 };
 
-class Spinlock{
+class Spinlock : Noncopyable{
 public:
     typedef ScopedLockImpl<Spinlock> Lock;
 
@@ -181,7 +180,7 @@ private:
     bool m_locked;
 };
 
-class RWMutex{
+class RWMutex : Noncopyable{
 public:
     typedef ReadScopedLockImpl<RWMutex> ReadLock;
     typedef WriteScopedLockImpl<RWMutex> WriteLock;
@@ -210,7 +209,7 @@ private:
     pthread_rwlock_t m_lock;
 };
 
-class NullRWMutex{
+class NullRWMutex : Noncopyable{
 public:
     typedef ReadScopedLockImpl<NullRWMutex> ReadLock;
     typedef WriteScopedLockImpl<NullRWMutex> WriteLock;
@@ -221,7 +220,7 @@ public:
     void wrlock(){};
 };
 
-class CASLock{
+class CASLock : Noncopyable{
 public:
     typedef ScopedLockImpl<CASLock> Lock;
     CASLock(){

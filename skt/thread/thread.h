@@ -4,9 +4,8 @@
 //after c++11, std::thread(pthread)
 
 #include "skt/mutex/mutex.h"
+
 namespace skt{
-
-
 
 class Thread{
 public:

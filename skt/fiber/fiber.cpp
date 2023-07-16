@@ -78,7 +78,7 @@ Fiber::Fiber(std::function<void()> cb, size_t stacksize, bool use_caller)
 Fiber::~Fiber() {
     --s_fiber_count;
     if(m_stack){
-        SKT_LOG_DEBUG(g_logger) << "~fiber id = " << m_id;
+        //SKT_LOG_DEBUG(g_logger) << "~fiber id = " << m_id;
         SKT_ASSERT(m_state == TERM || m_state == INIT || m_state == EXCEPT);
 
         StackAllocator::Dealloc(m_stack, m_stacksize);
@@ -92,7 +92,7 @@ Fiber::~Fiber() {
         }
     }
 
-    SKT_LOG_DEBUG(g_logger) << "Fiber::~Fiber id=" << m_id << "total=" << s_fiber_count;
+    SKT_LOG_DEBUG(g_logger) << "Fiber::~Fiber id=" << m_id << " total= " << s_fiber_count;
 }
 
 Fiber::ptr Fiber::GetThis() {

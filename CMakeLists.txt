@@ -25,6 +25,7 @@ set(LIB_SRC
      skt/iomanager/iomanager.cpp
      skt/timer/timer.cpp
      skt/hook/hook.cpp
+     skt/fd_manager/fd_manager.cpp
 )
 
 add_library(skt SHARED ${LIB_SRC})
