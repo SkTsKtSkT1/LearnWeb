@@ -26,6 +26,7 @@ set(LIB_SRC
      skt/timer/timer.cpp
      skt/hook/hook.cpp
      skt/fd_manager/fd_manager.cpp
+     skt/address/address.cpp
 )
 
 add_library(skt SHARED ${LIB_SRC})
@@ -79,6 +80,11 @@ add_executable(test_hook tests/test_hook.cpp)
 add_dependencies(test_hook skt)
 redefine_file_macro(test_hook) #__FILE__
 target_link_libraries(test_hook ${LIBS})
+
+add_executable(test_address tests/test_address.cpp)
+add_dependencies(test_address skt)
+redefine_file_macro(test_address) #__FILE__
+target_link_libraries(test_address ${LIBS})
 
 SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)

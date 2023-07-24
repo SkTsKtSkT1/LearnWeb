@@ -209,12 +209,28 @@ Timer -> addTimer() --> cancel()
 ```
 
 ## Hook
-sleep,
+sleep
 
 usleep
 
-## socket函数库
+socket 相关(socket, connect, accept)
 
+io相关(read, write, send, recv, ...)
+
+fd相关(fnctl, ioctl, ...)
+
+## socket函数库
+               [UnixAddress]
+                    |
+                -------                     |-[IPV4Address]
+                |Adress| --- [IPAddress] ---|
+                -------                     |-[IPV6Address]
+                    |
+                    |
+               ----------
+               | Socket |
+               ----------
+                
 ## http协议开发
 
 ## 分布协议

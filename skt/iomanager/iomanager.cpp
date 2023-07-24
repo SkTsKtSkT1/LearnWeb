@@ -266,7 +266,7 @@ bool IOManager::stopping() {
 
 void IOManager::idle() {
     epoll_event* events = new epoll_event[64]();
-    std::shared_ptr<epoll_event> shared_events(events, [](epoll_event* ptr){
+    std::shared_ptr<epoll_event> shared_events(events, [](epoll_event* ptr){ //d:自定义释放规则
         delete[] ptr;
     });
 
