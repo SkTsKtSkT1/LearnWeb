@@ -5,7 +5,7 @@
 #include "sys/time.h"
 namespace skt{
 
-skt::Logger::ptr g_logger = SKT_LOG_NAME("system");
+static skt::Logger::ptr g_logger = SKT_LOG_NAME("system");
 
 pid_t GetThreadId(){
     return syscall(SYS_gettid);

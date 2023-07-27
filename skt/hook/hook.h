@@ -4,6 +4,7 @@
 #include "unistd.h"
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
+#include "stdint.h"
 #include "fcntl.h"
 #include "sys/uio.h"
 
@@ -88,6 +89,7 @@ typedef int (*setsockopt_fun)(int sockfd, int level, int optname,
                const void *optval, socklen_t optlen);
 extern setsockopt_fun setsockopt_f;
 
+extern int connect_with_timeout(int fd, const struct sockaddr* addr, socklen_t addrlen, uint64_t timeout_ms);
 }
 
 #endif

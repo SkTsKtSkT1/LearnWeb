@@ -5,8 +5,16 @@
 #include "assert.h"
 #include "../util/util.h"
 
+#if defined __GNUC__ || defined __llvm__
+#define SKT_LIKELY(x)   __builtin_expect(!!(x), 1)
+#define SKT_UNLIKELY(x) __builtin_expect(!!(x), 0)
+#else
+#define SKT_LIKELY(x)   (x)
+#define SKT_UNLIKELY(x) (x)
+#endif
+
 #define SKT_ASSERT(x) \
-    if(!(x)){         \
+    if(SKT_UNLIKELY(!(x))){         \
         SKT_LOG_ERROR(SKT_LOG_ROOT()) << "ASSERTION: " #x \
         << "\nbacktrace:\n" \
         << skt::BacktraceToString(100, 2, "     ");\
@@ -14,7 +22,7 @@
     }
 
 #define SKT_ASSERT2(x, w) \
-    if(!(x)){            \
+    if(SKT_UNLIKELY(!(x))){            \
         SKT_LOG_ERROR(SKT_LOG_ROOT()) << "ASSERTION: " #x \
             << "\n" << w \
             << "\nbacktrace:\n" \

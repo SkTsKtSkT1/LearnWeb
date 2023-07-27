@@ -53,6 +53,7 @@ void test_socket(){
 
     buff.resize(rt);
     SKT_LOG_INFO(g_logger) << buff;
+    close(sock);
 }
 
 int main(int argc, char** argv){

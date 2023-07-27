@@ -231,6 +231,9 @@ fd相关(fnctl, ioctl, ...)
                | Socket |
                ----------
                 
+封装socket
+connect, accept, read/write/close
+
 ## http协议开发
 
 ## 分布协议

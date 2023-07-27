@@ -27,6 +27,7 @@ set(LIB_SRC
      skt/hook/hook.cpp
      skt/fd_manager/fd_manager.cpp
      skt/address/address.cpp
+     skt/socket/socket.cpp
 )
 
 add_library(skt SHARED ${LIB_SRC})
@@ -85,6 +86,11 @@ add_executable(test_address tests/test_address.cpp)
 add_dependencies(test_address skt)
 redefine_file_macro(test_address) #__FILE__
 target_link_libraries(test_address ${LIBS})
+
+add_executable(test_socket tests/test_socket.cpp)
+add_dependencies(test_socket skt)
+redefine_file_macro(test_socket) #__FILE__
+target_link_libraries(test_socket ${LIBS})
 
 SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)

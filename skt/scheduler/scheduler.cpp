@@ -130,7 +130,7 @@ void Scheduler::setThis() {
 }
 
 void Scheduler::run() {
-    SKT_LOG_DEBUG(g_logger) << "run";
+    SKT_LOG_DEBUG(g_logger) << "run and enable hook";
     set_hook_enable(true);
     setThis();
 
