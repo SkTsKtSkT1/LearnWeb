@@ -15,5 +15,6 @@
 #include "skt/address/address.h"
 #include "skt/hook/hook.h"
 #include "skt/socket/socket.h"
+#include "skt/bytearray/bytearray.h"
 
 #endif

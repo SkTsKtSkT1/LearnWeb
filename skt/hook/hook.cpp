@@ -135,7 +135,7 @@ retry:
         }else{
             //SKT_LOG_DEBUG(g_logger) << "do_io<" << hook_fun_name << ">";
             skt::Fiber::YieldToHold();
-            SKT_LOG_DEBUG(g_logger) << "do_io<" << hook_fun_name << ">";
+            //SKT_LOG_DEBUG(g_logger) << "do_io<" << hook_fun_name << ">";
             if(timer){
                 timer->cancel();
             }
@@ -147,7 +147,7 @@ retry:
             goto retry;
         }
     }
-    SKT_LOG_DEBUG(g_logger) << "Exit the hook func";
+    //SKT_LOG_DEBUG(g_logger) << "Exit the hook func";
     return n;
 }
 

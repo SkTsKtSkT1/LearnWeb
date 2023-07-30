@@ -219,12 +219,12 @@ bool Socket::close() {
         return true;
     }
     m_isConnected = false;
-    SKT_LOG_DEBUG(g_logger) << "run in close";
+    //SKT_LOG_DEBUG(g_logger) << "run in close";
     if(m_sock != -1){
         ::close(m_sock);
         m_sock = -1;
     }
-    SKT_LOG_DEBUG(g_logger) << "close already";
+    //SKT_LOG_DEBUG(g_logger) << "close already";
     return false;
 }
 

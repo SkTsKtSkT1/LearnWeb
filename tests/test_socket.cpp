@@ -41,12 +41,11 @@ void test_socket() {
     buffs.resize(4096);
 
     rt = sock->recv(&buffs[0], buffs.size());
-    SKT_LOG_INFO(g_logger) << "recv rt=" << rt << " errno=" << errno << " errstr=" << strerror(errno);
     if (rt <= 0) {
         SKT_LOG_INFO(g_logger) << "recv fail rt=" << rt;
         return;
     }
-
+    buffs.resize(rt);
     SKT_LOG_INFO(g_logger) << buffs;
 }
 

@@ -234,8 +234,23 @@ fd相关(fnctl, ioctl, ...)
 封装socket
 connect, accept, read/write/close
 
+
+## 序列化bytearray
+
+write(int, float, int64, ...)
+read(int, float, int64, ...)
+
 ## http协议开发
 
+HTTP/1.1 - API
+
+HttpRequest
+
+HttpResponse
+
+GET / HTTP/1.1
+
+Host:url
 ## 分布协议
 
 ## 推荐系统
