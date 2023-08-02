@@ -251,6 +251,31 @@ HttpResponse
 GET / HTTP/1.1
 
 Host:url
+
+HTTP/1.0 200 OK
+
+Pragma: no-cache
+
+Content-Type: text/html
+
+Content-Length: 14988
+
+Connection: close
+
+uri: http://www.xxxx.com:80/page/xxx?id=10&v=20#fr
+
+    http, 协议 
+
+    www.xxxx.com host
+
+    80 端口
+
+    /page/xxx path
+
+    id=10&v=20 query and param
+
+    fr fragment
+
 ## 分布协议
 
 ## 推荐系统
