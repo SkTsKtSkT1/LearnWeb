@@ -26,6 +26,15 @@ static skt::ConfigVar<uint64_t>::ptr g_http_response_max_body_size =
 static uint64_t s_http_request_buffer_size = 0;
 static uint64_t s_http_request_max_body_size = 0;
 
+uint64_t HttpRequestParser::GetHttpRequestBufferSize() {
+    return s_http_request_buffer_size;
+}
+
+uint64_t HttpRequestParser::GetHttpRequestMaxBodySize() {
+    return s_http_request_max_body_size;
+}
+
+namespace{
 struct _RequestSizeIniter{
     _RequestSizeIniter(){
         s_http_request_buffer_size = g_http_request_buffer_size->getValue();
@@ -43,6 +52,9 @@ struct _RequestSizeIniter{
                 );
     }
 };
+
+static _RequestSizeIniter _init;
+}
 
 void on_request_method(void *data, const char *at, size_t length){
     HttpRequestParser* parser = static_cast<HttpRequestParser*>(data);
@@ -124,7 +136,7 @@ HttpRequestParser::HttpRequestParser()
 
 }
 
-//1:success, -1 error, > 1 已处理的字节数且data有效数据为len - off - v
+//1:success, -1 error, > 1 已处理的字节数且data有效数据为len - off
 size_t HttpRequestParser::excute(char *data, size_t len) {
     size_t offset = http_parser_execute(&m_parser, data, len, 0);
     memmove(data, data + offset, (len - offset));
@@ -234,6 +246,14 @@ uint64_t HttpResponseParser::getContentLength() {
     return m_data->getHeaderAs<uint64_t>("content-length", 0);
 }
 
+
+std::ostream& operator<<(std::ostream& os, const HttpRequest& req){
+    return req.dump(os);
+}
+
+std::ostream& operator<<(std::ostream& os, const HttpResponse& rsp){
+    return rsp.dump(os);
+}
 
 }
 }

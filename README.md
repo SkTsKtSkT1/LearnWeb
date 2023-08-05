@@ -284,6 +284,19 @@ ragel mongrel2
 ## Stream针对文件/socket封装
 read/write/readFixSize/writeFixSize
 
+HttpSession/HttpConnection
+
+Server.accept, socket->session
+Client connect, socket -> connection
+
+HttpServer: TcpServer
+
+        Servlet <---- FunctionServlet
+            |
+            |
+            V
+    ServletDispatch
+
 ## 分布协议
 
 ## 推荐系统
