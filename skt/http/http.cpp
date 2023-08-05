@@ -1,5 +1,5 @@
 #include "http.h"
-
+#include "sstream"
 namespace skt{
 
 namespace http{
@@ -17,7 +17,7 @@ HttpMethod StringToHttpMethod(const std::string& m){
 
 HttpMethod CharsToHttpMethod(const char* m){
 #define XX(num, name, string) \
-    if(strcmp(#string, m) == 0){ \
+    if(strncmp(#string, m, strlen(#string)) == 0){ \
         return HttpMethod::name;\
     }
 
@@ -136,6 +136,13 @@ bool HttpRequest::hasCookie(const std::string &key, std::string *val) {
     return true;
 }
 
+std::string HttpRequest::toString() const {
+    std::stringstream ss;
+    dump(ss);
+    return ss.str();
+}
+
+
 std::ostream &HttpRequest::dump(std::ostream &os) const{
     //GET /uri HTTP/1.1
     //Host: www.sylar.top
@@ -169,6 +176,7 @@ std::ostream &HttpRequest::dump(std::ostream &os) const{
     return os;
 }
 
+
 HttpResponse::HttpResponse(uint8_t version, bool close)
     :m_status(HttpStatus::OK)
     ,m_version(version)
@@ -187,6 +195,12 @@ void HttpResponse::setHeader(const std::string &key, const std::string &val) {
 
 void HttpResponse::delHeader(const std::string &key) {
     m_headers.erase(key);
+}
+
+std::string HttpResponse::toString() const {
+    std::stringstream ss;
+    dump(ss);
+    return ss.str();
 }
 
 std::ostream &HttpResponse::dump(std::ostream &os) const {

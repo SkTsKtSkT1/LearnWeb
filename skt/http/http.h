@@ -5,7 +5,9 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include "sstream"
 #include <boost/lexical_cast.hpp>
+
 
 namespace skt {
 
@@ -143,7 +145,7 @@ struct CaseInsensitiveLess {
 };
 
 template<class MapType, class T>
-bool getAs(const MapType& m, const std::string& key, T& val, const T& def = T()){
+bool checkGetAs(const MapType& m, const std::string& key, T& val, const T& def = T()){
     std::string str;
     auto it = m.find(key);
     if(it == m.end()) {
@@ -160,7 +162,7 @@ bool getAs(const MapType& m, const std::string& key, T& val, const T& def = T())
 }
 
 template<class MapType, class T>
-T checkGetAs(const MapType& m, const std::string& key, const T& def = T()){
+T getAs(const MapType& m, const std::string& key, const T& def = T()){
     auto it = m.find(key);
     if(it == m.end()){
         return def;
@@ -252,6 +254,7 @@ public:
     }
 
     std::ostream& dump(std::ostream& os) const;
+    std::string toString() const;
 
 private:
     HttpMethod m_method;
@@ -306,8 +309,9 @@ public:
         return getAs(m_headers, key, def);
     }
 
-    std::ostream& dump(std::ostream& os) const;
 
+
+    std::ostream& dump(std::ostream& os) const;
     std::string toString() const;
 
 private:

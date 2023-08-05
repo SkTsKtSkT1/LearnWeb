@@ -40,6 +40,11 @@ set(LIB_SRC
      skt/socket/socket.cpp
      skt/bytearray/bytearray.cpp
      skt/http/http.cpp
+     skt/http/http11_parser.cpp
+     skt/http/httpclient-parser.cpp
+     skt/http/http_parser.cpp
+     skt/tcp_server/tcp_server.cpp
+     skt/stream/stream.cpp
 )
 
 add_library(skt SHARED ${LIB_SRC})
@@ -112,6 +117,21 @@ add_executable(test_http tests/test_http.cpp)
 add_dependencies(test_http skt)
 redefine_file_macro(test_http) #__FILE__
 target_link_libraries(test_http ${LIBS})
+
+add_executable(test_http_parser tests/test_http_parser.cpp)
+add_dependencies(test_http_parser skt)
+redefine_file_macro(test_http_parser) #__FILE__
+target_link_libraries(test_http_parser ${LIBS})
+
+add_executable(test_tcp_server tests/test_tcp_server.cpp)
+add_dependencies(test_tcp_server skt)
+redefine_file_macro(test_tcp_server) #__FILE__
+target_link_libraries(test_tcp_server ${LIBS})
+
+add_executable(echo_server example/echo_server.cpp)
+add_dependencies(echo_server skt)
+redefine_file_macro(echo_server) #__FILE__
+target_link_libraries(echo_server ${LIBS})
 
 SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)

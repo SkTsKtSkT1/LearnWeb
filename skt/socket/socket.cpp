@@ -433,4 +433,8 @@ void Socket::newSock() {
             << m_type << ", " << m_protocol << ") errno=" << errno << " errstr=" << strerror(errno);
     }
 }
+
+std::ostream& operator<<(std::ostream& os, const Socket& sock){
+    return sock.dump(os);
+}
 }

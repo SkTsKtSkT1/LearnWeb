@@ -441,10 +441,13 @@ void ByteArray::read(void *buf, size_t size, size_t position) const {
 
 //重新设置当前的操作位置
 void ByteArray::setPosition(size_t v) {
-    if(v > m_size){
+    if(v > m_capacity){
         throw std::out_of_range("set_postion out of range");
     }
     m_position = v;
+    if(m_position > m_size){
+        m_size = m_position;
+    }
     m_cur = m_root;
     while(v > m_cur->size){
         v -= m_cur->size;
@@ -454,6 +457,7 @@ void ByteArray::setPosition(size_t v) {
         m_cur = m_cur->next;
     }
 }
+
 
 bool ByteArray::writeToFile(const std::string &name) const {
     std::ofstream ofs;

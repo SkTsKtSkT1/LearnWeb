@@ -276,6 +276,14 @@ uri: http://www.xxxx.com:80/page/xxx?id=10&v=20#fr
 
     fr fragment
 
+ragel mongrel2
+
+## TcpServer封装
+基于TcpServer实现了一个EchoServer
+
+## Stream针对文件/socket封装
+read/write/readFixSize/writeFixSize
+
 ## 分布协议
 
 ## 推荐系统

@@ -97,6 +97,7 @@ public:
 
     size_t getPosition() const { return m_position;}
     void setPosition(size_t v);
+    bool setPositionForSzie(size_t v);
 
     bool writeToFile(const std::string& name) const;
     bool readFromFile(const std::string& name);
@@ -116,6 +117,7 @@ public:
     uint64_t getWriteBuffers(std::vector<iovec>& buffs, uint64_t len);
 
     size_t getSize() const { return m_size;}
+
 private:
     void addCapacity(size_t size); // expand to size
     size_t getCapacity() const { return m_capacity - m_position;}
