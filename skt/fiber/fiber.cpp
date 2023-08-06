@@ -174,6 +174,7 @@ void Fiber::swapIn() {
 
 void Fiber::swapOut() {
     SetThis(Scheduler::GetMainFiber());
+    SKT_ASSERT(t_fiber != nullptr)
     if(swapcontext(&m_ctx, &Scheduler::GetMainFiber()->m_ctx)){
         SKT_ASSERT2(false, "swapcontext");
     }
@@ -192,7 +193,7 @@ void Fiber::MainFunc() {
         SKT_LOG_ERROR(g_logger) << "Fiber Except: " << ex.what()
             << "fiber_id=" << cur->getId()
             << std::endl
-            <<skt::BacktraceToString();
+            << skt::BacktraceToString();
     } catch (...){
         cur->m_state = EXCEPT;
         SKT_LOG_ERROR(g_logger) << "Fiber Except"<< "fiber_id=" << cur->getId()

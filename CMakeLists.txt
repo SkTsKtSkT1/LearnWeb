@@ -49,6 +49,7 @@ set(LIB_SRC
      skt/http/http_session.cpp
      skt/http/http_server.cpp
      skt/http/servlet.cpp
+     skt/http/http_connection.cpp
 )
 
 add_library(skt SHARED ${LIB_SRC})
@@ -141,6 +142,11 @@ add_executable(test_http_server tests/test_http_server.cpp)
 add_dependencies(test_http_server skt)
 redefine_file_macro(test_http_server) #__FILE__
 target_link_libraries(test_http_server ${LIBS})
+
+add_executable(test_http_connection tests/test_http_connection.cpp)
+add_dependencies(test_http_connection skt)
+redefine_file_macro(test_http_connection) #__FILE__
+target_link_libraries(test_http_connection ${LIBS})
 
 SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)

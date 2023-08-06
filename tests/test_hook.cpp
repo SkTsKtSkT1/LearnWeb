@@ -31,6 +31,7 @@ void test_socket(){
     SKT_LOG_INFO(g_logger) << "connect rt=" << rt << " errno=" << errno;
 
     if(rt){
+        close(sock);
         return;
     }
 
@@ -39,6 +40,7 @@ void test_socket(){
     SKT_LOG_INFO(g_logger) << "send rt=" << rt << " errno=" << errno;
 
     if(rt <= 0){
+        close(sock);
         return ;
     }
 
@@ -48,6 +50,7 @@ void test_socket(){
     rt = recv(sock, &buff[0], buff.size(), 0);
     SKT_LOG_INFO(g_logger) << "recv rt=" << rt << " errno=" << errno;
     if(rt <= 0){
+        close(sock);
         return ;
     }
 

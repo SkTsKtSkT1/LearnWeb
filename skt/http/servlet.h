@@ -31,8 +31,9 @@ protected:
 class FunctionServlet : public Servlet{
 public:
     typedef std::shared_ptr<FunctionServlet> ptr;
-    typedef std::function<uint32_t (skt::http::HttpRequest::ptr request, skt::http::HttpResponse::ptr response,
-            skt::http::HttpSession::ptr session)> callback;
+    typedef std::function<int32_t (skt::http::HttpRequest::ptr request
+            , skt::http::HttpResponse::ptr response
+            , skt::http::HttpSession::ptr session)> callback;
     FunctionServlet(callback cb);
     virtual int32_t handle(skt::http::HttpRequest::ptr request, skt::http::HttpResponse::ptr response,
                            skt::http::HttpSession::ptr session) override;
@@ -72,6 +73,18 @@ private:
     std::vector<std::pair<std::string, Servlet::ptr>> m_globs;
     //默认的servlet，所有路径都没匹配到时候使用
     Servlet::ptr m_default;
+};
+
+class NotFoundServlet : public Servlet{
+public:
+    typedef std::shared_ptr<NotFoundServlet> ptr;
+    NotFoundServlet(const std::string& name);
+
+    virtual int32_t handle(skt::http::HttpRequest::ptr request, skt::http::HttpResponse::ptr response,
+                           skt::http::HttpSession::ptr session) override;
+private:
+    std::string m_name;
+    std::string m_content;
 };
 
 }

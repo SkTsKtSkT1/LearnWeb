@@ -19,6 +19,7 @@ IOManager::FdContext::EventContext& IOManager::FdContext::getContext(IOManager::
         default:
             SKT_ASSERT2(false, "getContext");
     }
+    throw std::invalid_argument("getContext invalid event");
 }
 
 void IOManager::FdContext::resetContext(EventContext& ctx){
@@ -265,7 +266,9 @@ bool IOManager::stopping() {
 }
 
 void IOManager::idle() {
-    epoll_event* events = new epoll_event[64]();
+    SKT_LOG_DEBUG(g_logger) << "idle";
+    const uint64_t MAX_EVENTS = 256;
+    epoll_event* events = new epoll_event[MAX_EVENTS]();
     std::shared_ptr<epoll_event> shared_events(events, [](epoll_event* ptr){ //d:自定义释放规则
         delete[] ptr;
     });
@@ -282,6 +285,8 @@ void IOManager::idle() {
             static const int MAX_TIMEOUT = 3000;
             if(next_timeout != ~0ull){
                 next_timeout = (int)next_timeout > MAX_TIMEOUT ? MAX_TIMEOUT : next_timeout;
+            }else{
+                next_timeout = MAX_TIMEOUT;
             }
             rt = epoll_wait(m_epfd, events, 64, (int)next_timeout);
             if(rt < 0 && errno == EINTR){
@@ -300,8 +305,8 @@ void IOManager::idle() {
         for(int i = 0; i < rt; ++i){
             epoll_event & event = events[i];
             if(event.data.fd == m_tickleFds[0]){
-                uint8_t  dummy;
-                while(read(m_tickleFds[0], &dummy, 1) == 1);
+                uint8_t  dummy[256];
+                while(read(m_tickleFds[0], dummy, sizeof(dummy)) > 0);
                 continue;
             }
 
