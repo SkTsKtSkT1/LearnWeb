@@ -20,3 +20,6 @@ function(redefine_file_macro targetname)
         )
     endforeach()
 endfunction()
+
+
+

@@ -1,8 +1,11 @@
 #include "http_connection.h"
 #include "http_parser.h"
+#include "skt/log/log.h"
 
 namespace skt{
 namespace http{
+
+static skt::Logger::ptr g_logger = SKT_LOG_NAME("system");
 HttpConnection::HttpConnection(Socket::ptr sock, bool owner)
         : SocketStream(sock, owner){
 
@@ -26,7 +29,7 @@ HttpResponse::ptr HttpConnection::recvResponse() {
         }
         len += offset;
         data[len] = '\0';
-        size_t nparse = parser->excute(data, len, true);//已处理的字节数且data有效数据为len - off
+        size_t nparse = parser->excute(data, len, false);//已处理的字节数且data有效数据为len - off
 
         if (parser->hasError()) {
             close();
@@ -41,15 +44,55 @@ HttpResponse::ptr HttpConnection::recvResponse() {
             break;
         }
     } while (true);
-    auto client_parser = parser->getParser();
-    std::string body;
+    auto& client_parser = parser->getParser();
     if (client_parser.chunked) {
-        //int len = offset;
+        int len = offset;
+        std::string body;
         do{
-            break;
-        }while(!parser->isFinished());
+            do{
+                int rt = read(data + len, buff_size - len);
+                if(rt <= 0) {
+                    close();
+                    return nullptr;
+                }
+                len += rt;
+                data[len] = '\0';
+                size_t nparse = parser->excute(data, len, true);
+                if(parser->hasError()){
+                    close();
+                    return nullptr;
+                }
+                len -= nparse;
+                if(len == (int)buff_size) {
+                    close();
+                    return nullptr;
+                }
+            }while(!parser->isFinished());
+            len -= 2;
+            SKT_LOG_INFO(g_logger) << "content_len =" << client_parser.content_len;
+            if(client_parser.content_len <= len){
+                body.append(data, client_parser.content_len);
+                memmove(data, data + client_parser.content_len, len - client_parser.content_len);
+                len -= client_parser.content_len;
+            }else{
+                body.append(data, len);
+                int left = client_parser.content_len - len;
+                while(left > 0){
+                    int rt = read(data, left > (int)buff_size ? (int)buff_size : left);
+                    if(rt <= 0){
+                        close();
+                        return nullptr;
+                    }
+                    body.append(data, rt);
+                    left -= rt;
+                }
+                len = 0;
+            }
+        }while(!client_parser.chunks_done);
+        parser->getData()->setBody(body);
     } else {
         int64_t length = parser->getContentLength();
+        std::string body;
         //store
         if (length > 0) {
             body.resize(length);
@@ -68,11 +111,12 @@ HttpResponse::ptr HttpConnection::recvResponse() {
                     return nullptr;
                 }
             }
+            parser->getData()->setBody(body);
         }
     }
-    if (!body.empty()) {
-        parser->getData()->setBody(body);
-    }
+//    if (!body.empty()) {
+//        parser->getData()->setBody(body);
+//    }
     //parser->getData()->init();
     return parser->getData();
 }

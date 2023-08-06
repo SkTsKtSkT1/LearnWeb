@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 project(skt_learn_web)
 
 include(cmake/utils.cmake)
+include(cmake/ragel.cmake)
 
 set(CMAKE_VERBOSE_MAKEFILE ON) #-rdynamic -O0
 set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS}  -rdynamic -O0 -ggdb -std=c++11  -Wall -Wno-deprecated -Werror -Wno-unused-function -Wno-builtin-macro-redefined")
@@ -40,8 +41,6 @@ set(LIB_SRC
      skt/socket/socket.cpp
      skt/bytearray/bytearray.cpp
      skt/http/http.cpp
-     skt/http/http11_parser.cpp
-     skt/http/httpclient-parser.cpp
      skt/http/http_parser.cpp
      skt/tcp_server/tcp_server.cpp
      skt/stream/stream.cpp
@@ -52,6 +51,12 @@ set(LIB_SRC
      skt/http/http_connection.cpp
 )
 
+ragelmaker(skt/http/http11_parser.rl LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/skt/http)
+ragelmaker(skt/http/httpclient_parser.rl LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/skt/http)
+ragelmaker(skt/uri/uri.rl LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/skt/uri)
+
+message(STATUS ${LIB_SRC})
+
 add_library(skt SHARED ${LIB_SRC})
 redefine_file_macro(skt) #__FILE__
 
@@ -61,7 +66,7 @@ set(LIBS
         pthread
         yaml-cpp)
 
-message("****", ${LIBS})
+#message("****", ${LIBS})
 
 add_executable(test tests/test.cpp)
 add_dependencies(test skt)
@@ -147,6 +152,12 @@ add_executable(test_http_connection tests/test_http_connection.cpp)
 add_dependencies(test_http_connection skt)
 redefine_file_macro(test_http_connection) #__FILE__
 target_link_libraries(test_http_connection ${LIBS})
+
+add_executable(test_uri tests/test_uri.cpp)
+add_dependencies(test_uri skt)
+redefine_file_macro(test_uri) #__FILE__
+target_link_libraries(test_uri ${LIBS})
+
 
 SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)
