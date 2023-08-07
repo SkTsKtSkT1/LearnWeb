@@ -83,7 +83,7 @@ namespace skt {
 
 
 #    pchar = unreserved | pct_encoded | sub_delims | ":" | "@";
-# add (any -- ascii) support chinese
+#      add (any -- ascii) support chinese
     pchar         = ( (any -- ascii ) | unreserved | pct_encoded | sub_delims | ":" | "@" ) ;
     segment = pchar*;
     segment_nz = pchar+;

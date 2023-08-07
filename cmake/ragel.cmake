@@ -1,7 +1,7 @@
 function(ragelmaker src_rl outputlist outputdir)
     #Create a custom build step that will call ragel on the provided src_rl file.
     #The output .cpp file will be appended to the variable name passed in outputlist.
-    message("into ragel.cmake")
+
     get_filename_component(src_file ${src_rl} NAME_WE)
 
     set(rl_out ${outputdir}/${src_file}.rl.cpp)

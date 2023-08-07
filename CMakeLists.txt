@@ -23,7 +23,7 @@ link_directories(/usr/local/lib)
 
 find_library(YAMLCPP yaml-cpp)
 find_library(PTHREAD pthread)
-message("****", ${YAMLCPP})
+#message("****", ${YAMLCPP})
 
 set(LIB_SRC
      skt/log/log.cpp
@@ -55,7 +55,7 @@ ragelmaker(skt/http/http11_parser.rl LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/skt/htt
 ragelmaker(skt/http/httpclient_parser.rl LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/skt/http)
 ragelmaker(skt/uri/uri.rl LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/skt/uri)
 
-message(STATUS ${LIB_SRC})
+#message(STATUS ${LIB_SRC})
 
 add_library(skt SHARED ${LIB_SRC})
 redefine_file_macro(skt) #__FILE__
