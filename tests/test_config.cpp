@@ -1,5 +1,6 @@
 #include "../skt/config/config.h"
 #include "../skt/log/log.h"
+#include "skt/env/env.h"
 #include "yaml-cpp/yaml.h"
 #include "vector"
 #include "string"
@@ -213,14 +214,24 @@ void test_log() {
     SKT_LOG_INFO(system_log) << "hello system" << std::endl;
 }
 
+void test_loadconf(){
+    skt::Config::LoadFromConfDir("conf");
+}
 int main(int argc, char** argv){
     //test_yaml();
     //test_config();
     //test_class();
-    test_log();
+//    test_log();
+    skt::EnvMgr::GetInstance()->init(argc, argv);
+    test_loadconf();
+    std::cout << " ==== " << std::endl;
+//    sleep(10);
+//    test_loadconf();
+    //return 0;
     skt::Config::Visit([](skt::ConfigVarBase::ptr var) -> void{
         SKT_LOG_INFO(SKT_LOG_ROOT()) << "name =" << var->getName() << " description=" << var->getDescription() << " typename=" << var->getTypeName()
                                <<" value=" << var->toString();
     });
+
     return 0;
 }

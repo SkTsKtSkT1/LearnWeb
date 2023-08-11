@@ -1,7 +1,16 @@
 #include "config.h"
 #include "list"
+#include "skt/env/env.h"
+#include "skt/util/util.h"
+#include "skt/log/log.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <ctime>
 
 namespace skt{
+
+static skt::Logger::ptr g_logger = SKT_LOG_NAME("system");
 
 //Config::ConfigVarMap Config::s_datas;  //static 成员变量的内存既不是在声明类时分配，也不是在创建对象时分配，而是在（类外）初始化时分配。反过来说，没有在类外初始化的 static 成员变量不能使用。
 ConfigVarBase::ptr Config::LookupBase(const std::string& name){
@@ -52,6 +61,33 @@ void Config::LoadFromYaml(const YAML::Node& root){
     }
 }
 
+//可以用md5来进一步做
+static std::map<std::string, uint64_t> s_file2modifytime;
+static skt::Mutex s_mutex;
+
+void Config::LoadFromConfDir(const std::string &path) {
+    std::string absolute_path = skt::EnvMgr::GetInstance()->getAbsolutePath(path);
+    std::vector<std::string> files;
+    FSUtil::ListAllFile(files, absolute_path, ".yml");
+    for(auto& i : files){
+        {
+            struct stat st{};
+            lstat(i.c_str(), &st);
+            skt::Mutex::Lock lock(s_mutex);
+            if(s_file2modifytime[i] == (uint64_t)st.st_mtim.tv_sec){
+                continue;
+            }
+            s_file2modifytime[i] = (uint64_t)st.st_mtim.tv_sec;
+        }
+        try {
+            YAML::Node root = YAML::LoadFile(i);
+            LoadFromYaml(root);
+            SKT_LOG_INFO(g_logger) << "LoadConfFile file=" << i << " ok";
+        }catch(...){
+            SKT_LOG_ERROR(g_logger) << "LoadConfFile file=" << i << " failed";
+        }
+    }
+}
 
 void Config::Visit(std::function<void(ConfigVarBase::ptr)> cb){
     RWMutexType::ReadLock lock(GetMutex());

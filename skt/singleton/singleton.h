@@ -1,6 +1,6 @@
 #ifndef LEARNWEB_SINGLETONG_H
 #define LEARNWEB_SINGLETONG_H
-#include "memory"
+#include <memory>
 //单例模式的封装
 //不在Log中实现单例模式，是因为分布式多线程等 可能是一个线程一个单例
 namespace skt{

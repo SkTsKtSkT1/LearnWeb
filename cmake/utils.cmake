@@ -22,4 +22,11 @@ function(redefine_file_macro targetname)
 endfunction()
 
 
+function(skt_add_executable targetname srcs depends libs)
+    add_executable(${targetname} ${srcs})
+    add_dependencies(${targetname} ${depends})
+    redefine_file_macro(${targetname})
+    target_link_libraries(${targetname} ${libs})
+endfunction()
+
 

@@ -49,6 +49,9 @@ set(LIB_SRC
      skt/http/http_server.cpp
      skt/http/servlet.cpp
      skt/http/http_connection.cpp
+     skt/daemon/daemon.cpp
+     skt/env/env.cpp
+     skt/application/application.cpp
 )
 
 ragelmaker(skt/http/http11_parser.rl LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/skt/http)
@@ -68,96 +71,27 @@ set(LIBS
 
 #message("****", ${LIBS})
 
-add_executable(test tests/test.cpp)
-add_dependencies(test skt)
-redefine_file_macro(test) #__FILE__
-target_link_libraries(test ${LIBS})
-
-add_executable(test_config tests/test_config.cpp)
-add_dependencies(test_config skt)
-redefine_file_macro(test_config) #__FILE__
-target_link_libraries(test_config ${LIBS})
-
-add_executable(test_thread tests/test_thread.cpp)
-add_dependencies(test_thread skt)
-redefine_file_macro(test_thread) #__FILE__
-target_link_libraries(test_thread ${LIBS})
-
-add_executable(test_utils tests/test_utils.cpp)
-add_dependencies(test_utils skt)
-redefine_file_macro(test_utils) #__FILE__
-target_link_libraries(test_utils ${LIBS})
-
-add_executable(test_fiber tests/test_fiber.cpp)
-add_dependencies(test_fiber skt)
-redefine_file_macro(test_fiber) #__FILE__
-target_link_libraries(test_fiber ${LIBS})
-
-add_executable(test_scheduler tests/test_scheduler.cpp)
-add_dependencies(test_scheduler skt)
-redefine_file_macro(test_scheduler) #__FILE__
-target_link_libraries(test_scheduler ${LIBS})
-
-add_executable(test_iomanager tests/test_iomanager.cpp)
-add_dependencies(test_iomanager skt)
-redefine_file_macro(test_iomanager) #__FILE__
-target_link_libraries(test_iomanager ${LIBS})
-
-add_executable(test_hook tests/test_hook.cpp)
-add_dependencies(test_hook skt)
-redefine_file_macro(test_hook) #__FILE__
-target_link_libraries(test_hook ${LIBS})
-
-add_executable(test_address tests/test_address.cpp)
-add_dependencies(test_address skt)
-redefine_file_macro(test_address) #__FILE__
-target_link_libraries(test_address ${LIBS})
-
-add_executable(test_socket tests/test_socket.cpp)
-add_dependencies(test_socket skt)
-redefine_file_macro(test_socket) #__FILE__
-target_link_libraries(test_socket ${LIBS})
-
-add_executable(test_bytearray tests/test_bytearray.cpp)
-add_dependencies(test_bytearray skt)
-redefine_file_macro(test_bytearray) #__FILE__
-target_link_libraries(test_bytearray ${LIBS})
-
-add_executable(test_http tests/test_http.cpp)
-add_dependencies(test_http skt)
-redefine_file_macro(test_http) #__FILE__
-target_link_libraries(test_http ${LIBS})
-
-add_executable(test_http_parser tests/test_http_parser.cpp)
-add_dependencies(test_http_parser skt)
-redefine_file_macro(test_http_parser) #__FILE__
-target_link_libraries(test_http_parser ${LIBS})
-
-add_executable(test_tcp_server tests/test_tcp_server.cpp)
-add_dependencies(test_tcp_server skt)
-redefine_file_macro(test_tcp_server) #__FILE__
-target_link_libraries(test_tcp_server ${LIBS})
-
-add_executable(echo_server example/echo_server.cpp)
-add_dependencies(echo_server skt)
-redefine_file_macro(echo_server) #__FILE__
-target_link_libraries(echo_server ${LIBS})
-
-add_executable(test_http_server tests/test_http_server.cpp)
-add_dependencies(test_http_server skt)
-redefine_file_macro(test_http_server) #__FILE__
-target_link_libraries(test_http_server ${LIBS})
-
-add_executable(test_http_connection tests/test_http_connection.cpp)
-add_dependencies(test_http_connection skt)
-redefine_file_macro(test_http_connection) #__FILE__
-target_link_libraries(test_http_connection ${LIBS})
-
-add_executable(test_uri tests/test_uri.cpp)
-add_dependencies(test_uri skt)
-redefine_file_macro(test_uri) #__FILE__
-target_link_libraries(test_uri ${LIBS})
-
+skt_add_executable(test tests/test.cpp skt "${LIBS}")
+skt_add_executable(test_config tests/test_config.cpp skt "${LIBS}")
+skt_add_executable(test_thread tests/test_thread.cpp skt "${LIBS}")
+skt_add_executable(test_utils tests/test_utils.cpp skt "${LIBS}")
+skt_add_executable(test_fiber tests/test_fiber.cpp skt "${LIBS}")
+skt_add_executable(test_scheduler tests/test_scheduler.cpp skt "${LIBS}")
+skt_add_executable(test_iomanager tests/test_iomanager.cpp skt "${LIBS}")
+skt_add_executable(test_hook tests/test_hook.cpp skt "${LIBS}")
+skt_add_executable(test_address tests/test_address.cpp skt "${LIBS}")
+skt_add_executable(test_socket tests/test_socket.cpp skt "${LIBS}")
+skt_add_executable(test_bytearray tests/test_bytearray.cpp skt "${LIBS}")
+skt_add_executable(test_http tests/test_http.cpp skt "${LIBS}")
+skt_add_executable(test_http_parser tests/test_http_parser.cpp skt "${LIBS}")
+skt_add_executable(test_tcp_server tests/test_tcp_server.cpp skt "${LIBS}")
+skt_add_executable(echo_server example/echo_server.cpp skt "${LIBS}")
+skt_add_executable(test_http_server tests/test_http_server.cpp skt "${LIBS}")
+skt_add_executable(test_http_connection tests/test_http_connection.cpp skt "${LIBS}")
+skt_add_executable(test_uri tests/test_uri.cpp skt "${LIBS}")
+skt_add_executable(test_daemon tests/test_daemon.cpp skt "${LIBS}")
+skt_add_executable(test_env tests/test_env.cpp skt "${LIBS}")
+skt_add_executable(test_application tests/test_application.cpp skt "${LIBS}")
 
 SET(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/lib)
